@@ -21,6 +21,12 @@ Le jeu est **jouable de bout en bout** : menu → placement des manettes → mat
 
 Règle commune : **un but ne compte que si un attaquant a touché la balle dans le cercle** (`ball.circle`). Sinon « But refusé » et coup franc défensif.
 
+### Changement de côté (`nextPeriod`, `resetSides`)
+- À la fin de la mi-temps (`period-1 === M.periods/2` : après le Q2 en gazon, après la 1re mi-temps en salle), `teams[t].dir` est inversé au moment de la reprise, avant le coup d'envoi. Tout le reste en dérive (`goalX`, `ownGoalX`, `homeX`, placement IA, gardiens).
+- `resetSides()` remet les sens d'origine (oranges attaquent à droite) au lancement d'un match et pour la démo du menu.
+- Après le changement, c'est l'équipe 1 qui engage au début de la 2e mi-temps ; le coup d'envoi alterne ensuite (`period % 2`).
+- Le cadre des buts prend la couleur de l'équipe qui le défend (`ownGoalX(0) === gx`).
+
 ### Arrêts de jeu (`checkOut`, `restart`, `kickoff`)
 - Remise en jeu (gazon), sortie de but → coup franc à la distance du cercle, corner long, but, but refusé.
 - La balle et le tireur sont placés **à l'intérieur** du terrain, et la balle ne peut pas sortir pendant `grace` (≈1 s).

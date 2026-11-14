@@ -13,7 +13,6 @@ Quand un élément est terminé, le retirer d'ici et l'ajouter dans `HISTORIQUE.
 - P2 — Gardien contrôlable (aujourd'hui toujours IA) ou bouton de sortie du gardien.
 - P2 — Tir dirigé plus fin (visée haut/bas du but en gazon, tir du revers).
 - P2 — Dribble / feinte (bouton dédié, par ex. R3 ou stick droit).
-- P3 — Changement de côté à la mi-temps.
 - P3 — Fatigue / jauge d'endurance liée au sprint.
 
 ## IA

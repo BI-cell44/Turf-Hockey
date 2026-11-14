@@ -184,6 +184,7 @@ button:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
     <div class="card l">
       <div class="kick" id="brkK">Pause entre quarts-temps</div>
       <h2 id="brkT">Fin du Q1</h2>
+      <p class="rule" id="brkN"></p>
       <div id="brkS"></div>
       <div class="row"><button class="go" id="next">Jouer le Q2</button><span class="small">ou A / Entrée</span></div>
     </div>
@@ -658,7 +659,7 @@ function menuInput(){
   if(ANY.okP)goPads();
 }
 function hideScreens(){for(const id of ['menu','pads','brk','pause','end'])$(id).hidden=true;try{document.activeElement&&document.activeElement.blur()}catch(e){}}
-function demoReset(){applyMode();humans=[];teamH=[[],[]];teamLvl=[LEVELS[3],LEVELS[3]];teams[0].name='DOM';teams[1].name='EXT';teams[0].score=teams[1].score=0;buildPlayers();period=1;qClock=0;freeze=0;pendingKick=null;kickoff(0);updateHint()}
+function demoReset(){applyMode();resetSides();humans=[];teamH=[[],[]];teamLvl=[LEVELS[3],LEVELS[3]];teams[0].name='DOM';teams[1].name='EXT';teams[0].score=teams[1].score=0;buildPlayers();period=1;qClock=0;freeze=0;pendingKick=null;kickoff(0);updateHint()}
 function backToMenu(){state='menu';hideScreens();$('menu').hidden=false;demoReset();renderMenu()}
 function goPads(){state='pads';hideScreens();$('pads').hidden=false;lastAsg='';focusBtns()}
 
@@ -696,7 +697,7 @@ function padsInput(){
 
 // ---------- Flux de jeu ----------
 function startMatch(){
-  initAudio();K.clear();applyMode();buildPlayers();
+  initAudio();K.clear();applyMode();resetSides();buildPlayers();
   humans=[];teamH=[[],[]];
   for(const id of devs){const p=devPos[id]||0;if(!p)continue;const t=p<0?0:1;if(teamH[t].length>=M.FORM.length-1)continue;
     const h={i:humans.length,dev:id,t,p:null,col:HCOL[humans.length%4],lab:'J'+(humans.length+1)};humans.push(h);teamH[t].push(h)}
@@ -719,12 +720,20 @@ function statsHTML(n){
     h+='<div class="st"><span class="v">'+(r[3]??r[1])+'</span><span class="lb">'+r[0]+'</span><span class="v r">'+(r[4]??r[2])+'</span><div class="bar'+(s?'':' z')+'"><i class="h" style="width:'+w+'%"></i><i class="a" style="width:'+(100-w)+'%"></i></div></div>'}
   return h+'</div>';
 }
-function nextPeriod(){if(state!=='break')return;$('brk').hidden=true;state='play';kickoff(period%2===0?1:0);showMsg(pName(period),'',1.2)}
+function resetSides(){teams[0].dir=1;teams[1].dir=-1}
+function nextPeriod(){
+  if(state!=='break')return;$('brk').hidden=true;state='play';
+  const swap=period-1===M.periods/2; // fin de la mi-temps : les équipes changent de côté
+  if(swap){teams[0].dir=-teams[0].dir;teams[1].dir=-teams[1].dir}
+  kickoff(period%2===0?1:0);
+  showMsg(pName(period),swap?'Les équipes ont changé de côté':'',swap?2.2:1.2);
+}
 function endPeriod(){
   sfx.whistle();K.clear();const P=M.periods;
   if(period<P){
     $('brkT').textContent=M.plab==='Q'?'Fin du Q'+period:'Fin de la 1re mi-temps';
     $('brkK').textContent=period===P/2?'Mi-temps':'Pause entre quarts-temps';
+    $('brkN').textContent=period===P/2?'Les équipes changent de côté pour la suite du match.':'';
     $('brkS').innerHTML=statsHTML(period);period++;qClock=0;state='break';breakT=0;
     $('next').textContent=M.plab==='Q'?'Jouer le Q'+period:'Jouer la 2e mi-temps';$('brk').hidden=false;focusBtns()}
   else{
@@ -799,7 +808,7 @@ function draw(){
     ctx.fillStyle='rgba(244,247,251,.5)';ctx.beginPath();ctx.arc(gx===0?M.SPOT:L-M.SPOT,W/2,.09,0,7);ctx.fill()}
   ctx.restore();
   for(const gx of [0,L]){
-    const gd=M.boards?1:1.2,x0=gx===0?-gd:L,y0=W/2-GW/2,col=teams[gx===0?0:1].col,fw=Math.max(.16,3/s);
+    const gd=M.boards?1:1.2,x0=gx===0?-gd:L,y0=W/2-GW/2,col=teams[ownGoalX(0)===gx?0:1].col,fw=Math.max(.16,3/s);
     ctx.fillStyle='#07090d';ctx.fillRect(x0,y0,gd,GW);
     ctx.strokeStyle='rgba(255,255,255,.13)';ctx.lineWidth=lw*.45;ctx.beginPath();
     for(let k=.3;k<GW;k+=.3){ctx.moveTo(x0,y0+k);ctx.lineTo(x0+gd,y0+k)}for(let k=.3;k<gd;k+=.3){ctx.moveTo(x0+k,y0);ctx.lineTo(x0+k,y0+GW)}ctx.stroke();

@@ -39,6 +39,10 @@ Chaque décision : le choix, la raison, et ce qu'il ne faut pas casser. Ajouter 
 - **Choix** : `u` = distance au propre but. Position de base `fx*L`, décalage `(u_balle - L/2) * 0,45`, planchers : en défense `max(4·S2, min(u_balle − 3·S2, 0,6·CR))` (+4·S2 milieux, +8·S2 attaquants) ; en attaque `0,75 × base`.
 - **Raison** : les défenseurs collaient à la ligne de fond quand la balle était dans leur camp.
 
+## D11 — Sens d'attaque variable, jamais en dur
+- **Choix** : le côté d'une équipe n'est jamais supposé. Toujours passer par `teams[t].dir`, `goalX(t)`, `ownGoalX(t)` ou `homeX`. Ne pas écrire de condition du type « équipe 0 = gauche ». C'est ce qui permet le changement de côté.
+- **Test accéléré** : pour simuler un match entier sans attendre, utiliser l'horloge de Playwright (`page.clock.install()` avant `goto`, puis `page.clock.runFor(ms)`). Choisir la durée « Courte » et placer les deux claviers sur « ne joue pas » pour regarder l'ordinateur jouer. Les buts gèlent le temps 2,6 s, donc prévoir une marge et boucler jusqu'à l'apparition de l'écran de pause.
+
 ## D10 — Publication et sauvegardes
 - Artifact : toujours republier sur la même URL (paramètre `url`) pour que le lien de l'utilisateur reste valable.
 - GitHub : `main` de https://github.com/BI-cell44/Turf-Hockey.

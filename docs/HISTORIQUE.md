@@ -4,6 +4,11 @@ Chronologie des demandes de l'utilisateur et de ce qui a été livré. Les numé
 
 ---
 
+## 14/11/2026 — Changement de côté à la mi-temps
+- Demande : « prévoir le changement de côté à la mi-temps (en gazon et en salle) ».
+- Livré : à la fin de la mi-temps (après le Q2 en gazon, après la 1re mi-temps en salle), les équipes inversent leur sens d'attaque (`teams[t].dir`), les joueurs et le gardien se replacent côté opposé au coup d'envoi. Mention « Les équipes changent de côté » sur l'écran de pause et message « Les équipes ont changé de côté » à la reprise. Les buts gardent la couleur de l'équipe qui les défend.
+- Test : match de salle accéléré avec l'horloge simulée de Playwright (voir D11).
+
 ## 14/11/2026 — Mise en dépôt et documentation
 - Demande : déposer le code sur https://github.com/BI-cell44/Turf-Hockey et dans `D:\Developpement\Turf Hockey`, avec une mémoire de projet (CLAUDE.md + docs/).
 - Livré : `index.html` autonome (document HTML complet), `tools/artifact_fragment.py`, `tests/smoke_test.js`, README, CLAUDE.md, docs (état, historique, backlog, décisions).
