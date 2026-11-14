@@ -1,0 +1,45 @@
+# Décisions techniques — Turf Hockey 26
+
+Chaque décision : le choix, la raison, et ce qu'il ne faut pas casser. Ajouter une entrée datée pour toute nouvelle décision structurante.
+
+## D1 — Un seul fichier HTML, sans dépendance
+- **Choix** : HTML + CSS + JavaScript « vanilla » dans `index.html`, rendu Canvas 2D, sons synthétisés en WebAudio.
+- **Raison** : publication directe en Artifact claude.ai (une page autonome), ouverture par double-clic sur le PC, aucun build.
+- **Contrainte** : l'Artifact n'autorise que certains CDN ; on n'en utilise aucun. Seule ressource externe : Google Fonts (Saira Extra Condensed, IBM Plex Sans) avec repli système.
+
+## D2 — Deux formats du même code
+- **Choix** : `index.html` est un document complet (source de vérité). L'Artifact attend un fragment (sans `<!doctype>`, `<html>`, `<head>`, `<body>`) : `tools/artifact_fragment.py` le produit.
+- **À ne pas casser** : garder la règle CSS `[hidden]{display:none!important}` (les écrans sont masqués via l'attribut `hidden` alors que `.screen` a `display:grid`).
+
+## D3 — Unités en mètres, terrain réel
+- **Choix** : toute la simulation est en mètres et secondes ; dimensions réglementaires (gazon 91,4 × 55, salle 44 × 22).
+- **Conséquence** : les distances de l'IA sont mises à l'échelle avec `SC = L/91.4` (proportionnel) et `S2 = max(SC, .6)` (distances « physiques » qui ne doivent pas trop rétrécir en salle).
+
+## D4 — Machine à états simple
+- **Choix** : variable `state` ∈ `menu`, `pads`, `play`, `pause`, `break`, `end` ; `update(dt)` aiguille. En `menu` et `pads`, un match de démonstration ordinateur contre ordinateur tourne en fond.
+
+## D5 — Entrées unifiées par appareil
+- **Choix** : chaque appareil (`kb1`, `kb2`, `p0`…`p3`) est lu par `readDev`, puis `pollAll` calcule les fronts (`passP`, `okP`, `leftP`…) par appareil dans `IN[id]` et leur union dans `ANY`.
+- **Raison** : multijoueur local et navigation des menus avec n'importe quel appareil.
+- **Détail** : la touche Entrée/J du clavier 1 vaut « valider » ; sur manette standard A ou Start valident, B ou Back reviennent. Pour `pad.mapping !== 'standard'`, toutes les touches principales valident et seul Back revient (évite que ✕ PlayStation fasse « retour »).
+
+## D6 — Contrôle humain par pointeur `ctrl`
+- **Choix** : chaque joueur a `ctrl` = index de l'humain qui le contrôle, ou `null` (IA). `setCtrl(h, p)` garantit qu'un joueur n'a qu'un humain. Le gardien n'est jamais contrôlé par un humain.
+- **Changement automatique** : seulement s'il y a un seul humain dans l'équipe (sinon les humains se « voleraient » les joueurs).
+- **Passe** : `passCtrl` → en coop, le receveur va à un autre humain que le passeur.
+
+## D7 — Anti-validation accidentelle
+- **Choix** : l'écran de fin démarre sans bouton présélectionné (`btnFocus = -1`), avec 0,8 s d'attente ; B/Échap n'y font rien. Entre deux périodes : 0,8 s d'attente puis A.
+- **Raison** : A = passe/tacle en jeu, l'utilisateur relançait la partie sans le vouloir.
+
+## D8 — Passes en bande calculées par point miroir
+- **Choix** : la bande n'amortit que la composante perpendiculaire (`vy *= E_B`). Le point visé est le miroir du receveur, avec la distance après rebond divisée par `E_B`, ce qui donne une trajectoire exacte (le frottement réduit la vitesse sans changer la direction).
+
+## D9 — Placement IA en repère d'équipe
+- **Choix** : `u` = distance au propre but. Position de base `fx*L`, décalage `(u_balle - L/2) * 0,45`, planchers : en défense `max(4·S2, min(u_balle − 3·S2, 0,6·CR))` (+4·S2 milieux, +8·S2 attaquants) ; en attaque `0,75 × base`.
+- **Raison** : les défenseurs collaient à la ligne de fond quand la balle était dans leur camp.
+
+## D10 — Publication et sauvegardes
+- Artifact : toujours republier sur la même URL (paramètre `url`) pour que le lien de l'utilisateur reste valable.
+- GitHub : `main` de https://github.com/BI-cell44/Turf-Hockey.
+- PC de l'utilisateur (Windows) : `D:\Developpement\Turf Hockey`, écrit via le pont « appareil » de Claude quand la conversation est reliée au PC.

@@ -1,0 +1,5 @@
+node_modules/
+tests/derniere_capture.png
+*.log
+.DS_Store
+Thumbs.db
