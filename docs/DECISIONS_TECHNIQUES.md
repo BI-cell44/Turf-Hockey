@@ -43,6 +43,12 @@ Chaque décision : le choix, la raison, et ce qu'il ne faut pas casser. Ajouter 
 - **Choix** : le côté d'une équipe n'est jamais supposé. Toujours passer par `teams[t].dir`, `goalX(t)`, `ownGoalX(t)` ou `homeX`. Ne pas écrire de condition du type « équipe 0 = gauche ». C'est ce qui permet le changement de côté.
 - **Test accéléré** : pour simuler un match entier sans attendre, utiliser l'horloge de Playwright (`page.clock.install()` avant `goto`, puis `page.clock.runFor(ms)`). Choisir la durée « Courte » et placer les deux claviers sur « ne joue pas » pour regarder l'ordinateur jouer. Les buts gèlent le temps 2,6 s, donc prévoir une marge et boucler jusqu'à l'apparition de l'écran de pause.
 
+## D12 — Le tactile est un appareil comme les autres
+- **Choix** : l'écran tactile est l'appareil `touch` dans `devs`/`devPos`/`IN`, avec la même forme de données que clavier et manette (`readDev`). Le reste du jeu (placement, coop, contrôle) n'a rien de spécifique au tactile.
+- **À ne pas casser** : `touch-action:none` sur `#pitch` et `#tc` (sinon le navigateur défile ou zoome pendant le jeu), mais `touch-action:pan-y` sur `.screen` (menus défilables). Ne pas mettre `touch-action:none` sur un ancêtre commun : le comportement le plus restrictif gagnerait.
+- **Boutons** : relâchement retardé de 70 ms (`tmr`) pour que la boucle (60 Hz) voie toujours un appui très court.
+- **Test** : `hasTouch` + `isMobile` dans Playwright, événements envoyés par `Input.dispatchTouchEvent` (CDP) ; `page.touchscreen` ne sait que taper.
+
 ## D10 — Publication et sauvegardes
 - Artifact : toujours republier sur la même URL (paramètre `url`) pour que le lien de l'utilisateur reste valable.
 - GitHub : `main` de https://github.com/BI-cell44/Turf-Hockey.

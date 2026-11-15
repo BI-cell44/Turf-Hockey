@@ -4,6 +4,7 @@ Priorités : **P1** = demandé ou bloquant, **P2** = amélioration utile, **P3**
 Quand un élément est terminé, le retirer d'ici et l'ajouter dans `HISTORIQUE.md`.
 
 ## À confirmer avec l'utilisateur
+- **P1 — Tactile sur vrai téléphone** : faire valider par l'utilisateur la taille et la position des boutons, le confort du joystick, et si le jeu en paysage est fluide.
 - **P1 — Tir chargé** : la demande « quand on a chargé le tir la balle part et ne peut pas rester chargée » a été interprétée comme « tir automatique quand la jauge est pleine ». Si l'utilisateur voulait l'inverse (garder la jauge pleine tant que le bouton est tenu), retirer le bloc `p.full` dans `humanControl`.
 - **P1 — Manettes réelles** : faire confirmer que la détection, la navigation des menus et les boutons répondent bien avec ses manettes (modèle et navigateur ?).
 
@@ -27,6 +28,7 @@ Quand un élément est terminé, le retirer d'ici et l'ajouter dans `HISTORIQUE.
 - P3 — Personnalisation des touches (utile pour les manettes non standard).
 
 ## Technique
-- P2 — Mode plein écran (bouton) pour jouer hors iframe plus confortablement.
+- P2 — Mobile : retour haptique (vibration) sur tir et but, option gaucher (inverser joystick et boutons), taille des boutons réglable.
+- P3 — Mode 2 joueurs sur un même écran tactile (un joystick par côté).
 - P3 — Séparer le JS en modules si le fichier dépasse ~1500 lignes (en gardant une version un-seul-fichier pour l'Artifact).
 - P3 — Tests automatisés plus poussés (simulation accélérée, assertions sur les règles).

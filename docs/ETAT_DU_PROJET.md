@@ -39,6 +39,13 @@ Règle commune : **un but ne compte que si un attaquant a touché la balle dans 
 - Manettes non « standard » : dans les menus, n'importe quelle touche principale valide, seule Select/Back revient en arrière.
 - Tir : maintenir X pour charger, viser avec le stick, relâcher. **Jauge pleine → tir automatique après 0,15 s** (choix de l'utilisateur, à confirmer, voir BACKLOG).
 
+### Commandes tactiles (téléphone / tablette)
+- `touchOn` : vrai si l'appareil est tactile (`pointer:coarse`) ou dès le premier `pointerdown` de type `touch`. Alors l'appareil `touch` apparaît dans `devs` ; s'il n'y a pas de clavier (`kbSeen` faux), les claviers sont masqués et l'écran tactile est placé côté oranges par défaut.
+- Overlay `#tc` (visible seulement en `play` si un humain utilise `touch`) : `#jz` joystick flottant (rayon `JR` = 56 px, zone morte 15 %), boutons `.tb[data-b]` (`pass`, `lob`, `shoot`, `through`, `sprint`, `sw`, `start`). L'état tactile est dans l'objet `T`, lu par `readDev('touch')` comme n'importe quel autre appareil. Multi-touch via Pointer Events.
+- Portrait : `#rotate` (« Tourne ton téléphone ») et la simulation est suspendue (`needRotate`).
+- En tactile : mini-carte réduite en haut à droite, aide clavier masquée. Hors match (`state !== 'play'`) le tableau des scores et la mini-carte sont masqués (`.nohud`).
+- Les écrans (`.screen`) sont en flex avec `.card{margin:auto}` : centrés mais défilables sans coupure en haut sur petits écrans.
+
 ### Multijoueur (`humans`, `teamH`, `setCtrl`, `passCtrl`)
 - Écran « Qui joue où ? » : chaque appareil pousse gauche (oranges) / centre (ne joue pas) / droite (blancs). Clic souris possible.
 - J1…J4 ont chacun une couleur d'anneau (`HCOL`) et une étiquette au-dessus du joueur.
@@ -86,6 +93,7 @@ Règle commune : **un but ne compte que si un attaquant a touché la balle dans 
 | Démarrage | boucle `requestAnimationFrame` |
 
 ## Points fragiles connus
+- **Tactile non testé sur un vrai téléphone** : validé uniquement en émulation mobile (Chromium). Points à surveiller sur appareil réel : taille des boutons, confort du joystick, comportement des barres du navigateur iOS/Android, plein écran (non supporté sur iPhone).
 - **Manettes réelles non testées par Claude** : tout a été testé au clavier dans Chromium sans manette. Les retours de l'utilisateur sont la seule source sur le comportement réel des manettes.
 - Dans l'iframe claude.ai, le clavier ne marche qu'après un clic dans le jeu ; la manette peut ne pas être détectée → conseiller d'ouvrir le jeu dans un onglet à part ou d'ouvrir `index.html` en local.
 - Équilibrage de l'IA réglé « à l'œil » ; pas de mesure objective.

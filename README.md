@@ -7,7 +7,7 @@ Jeu de hockey vu de dessus, jouable à la manette façon eFootball, de 1 à 4 jo
 - 5 niveaux d'IA (Débutant → Légende), statistiques de match, coop ou versus.
 
 ## Jouer
-Ouvre `index.html` dans Chrome, Edge ou Firefox (double-clic, aucune installation). Branche une manette et appuie sur un bouton pour qu'elle soit détectée.
+Ouvre `index.html` dans Chrome, Edge ou Firefox (double-clic, aucune installation). Branche une manette et appuie sur un bouton pour qu'elle soit détectée. Sur téléphone ou tablette, tourne l'écran en paysage : joystick à gauche, boutons à droite.
 
 | Action | Manette | Clavier 1 | Clavier 2 |
 |---|---|---|---|

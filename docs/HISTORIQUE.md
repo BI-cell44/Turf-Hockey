@@ -4,6 +4,14 @@ Chronologie des demandes de l'utilisateur et de ce qui a été livré. Les numé
 
 ---
 
+## 15/11/2026 — Version mobile (commandes tactiles)
+- Demande : « faire en sorte que ça fonctionne sur mobile » et renommer « Choisir les manettes » en « Choisir les commandes ».
+- Livré : joystick flottant à gauche, boutons A/B/X/Y en losange à droite, « Sprint » et « Changer » au-dessus, bouton II pour la pause ; écran « Tourne ton téléphone » en portrait ; menus défilables sur petits écrans ; bouton « Plein écran » ; l'écran tactile apparaît comme un appareil (« Écran tactile ») dans « Qui joue où ? ». Bouton du menu renommé « Choisir les commandes », titre de l'écran de placement « Choix des commandes ».
+- Corrigé au passage : le tableau des scores et la mini-carte du match de démo ne se superposent plus aux menus.
+- Test : émulation mobile Playwright (844 × 390, événements tactiles réels via CDP).
+
+---
+
 ## 14/11/2026 — Changement de côté à la mi-temps
 - Demande : « prévoir le changement de côté à la mi-temps (en gazon et en salle) ».
 - Livré : à la fin de la mi-temps (après le Q2 en gazon, après la 1re mi-temps en salle), les équipes inversent leur sens d'attaque (`teams[t].dir`), les joueurs et le gardien se replacent côté opposé au coup d'envoi. Mention « Les équipes changent de côté » sur l'écran de pause et message « Les équipes ont changé de côté » à la reprise. Les buts gardent la couleur de l'équipe qui les défend.

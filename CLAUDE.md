@@ -14,7 +14,7 @@ Jeu de hockey (gazon 11 c. 11 et salle 5 c. 5) vu de dessus, jouable à la manet
 ## Où sont les choses
 | Élément | Emplacement |
 |---|---|
-| Code du jeu (source unique) | `index.html` (HTML + CSS + JS, ~880 lignes) |
+| Code du jeu (source unique) | `index.html` (HTML + CSS + JS, ~1000 lignes) |
 | Conversion pour l'Artifact claude.ai | `tools/artifact_fragment.py` |
 | Test de fumée (Playwright) | `tests/smoke_test.js` |
 | Dépôt GitHub | https://github.com/BI-cell44/Turf-Hockey |
