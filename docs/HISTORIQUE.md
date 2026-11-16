@@ -4,6 +4,12 @@ Chronologie des demandes de l'utilisateur et de ce qui a été livré. Les numé
 
 ---
 
+## 16/11/2026 — Jeu en ligne (branche `jeu-en-ligne`, pas encore fusionnée dans `main`)
+- Demande : jeu en ligne pour ceux qui ouvrent la page publiée. Choix de l'utilisateur : code de salle, jusqu'à 4 joueurs. Demande de travailler sur une branche à part.
+- Menu : bouton « Jouer en ligne » → créer une salle (code à 5 caractères + lien `?salle=CODE`) ou rejoindre. Salle d'attente, placement des commandes par l'hôte, match, pause/mi-temps/fin visibles côté invités.
+- Technique : PeerJS (chargé à la demande), hôte autoritaire (voir D13). Testé avec 2 navigateurs Playwright (`tests/online_test.js`).
+- Ne marche PAS dans l'Artifact claude.ai (WebRTC bloqué), seulement sur la page publiée.
+
 ## 15/11/2026 — Version mobile (commandes tactiles)
 - Demande : « faire en sorte que ça fonctionne sur mobile » et renommer « Choisir les manettes » en « Choisir les commandes ».
 - Livré : joystick flottant à gauche, boutons A/B/X/Y en losange à droite, « Sprint » et « Changer » au-dessus, bouton II pour la pause ; écran « Tourne ton téléphone » en portrait ; menus défilables sur petits écrans ; bouton « Plein écran » ; l'écran tactile apparaît comme un appareil (« Écran tactile ») dans « Qui joue où ? ». Bouton du menu renommé « Choisir les commandes », titre de l'écran de placement « Choix des commandes ».

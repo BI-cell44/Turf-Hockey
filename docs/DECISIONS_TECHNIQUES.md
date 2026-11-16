@@ -53,3 +53,10 @@ Chaque décision : le choix, la raison, et ce qu'il ne faut pas casser. Ajouter 
 - Artifact : toujours republier sur la même URL (paramètre `url`) pour que le lien de l'utilisateur reste valable.
 - GitHub : `main` de https://github.com/BI-cell44/Turf-Hockey.
 - PC de l'utilisateur (Windows) : `D:\Developpement\Turf Hockey`, écrit via le pont « appareil » de Claude quand la conversation est reliée au PC.
+
+## D13 — Jeu en ligne : hôte autoritaire sur PeerJS
+- **Choix** : l'hôte fait tourner toute la simulation ; les invités envoient leurs touches (`{x,y,h,p}` : directions, boutons tenus, fronts montants mémorisés) et reçoivent des instantanés à 20 Hz, interpolés à l'affichage. Les invités sont des appareils `net1..net3` comme les autres (D5, D12).
+- **Raison** : pas de serveur à héberger (courtier PeerJS gratuit pour l'échange initial, ensuite connexion directe WebRTC) ; un seul code de simulation, pas de désynchronisation.
+- **Exception à D1** : PeerJS est chargé à la demande depuis jsDelivr (version fixée, empreinte SRI). Hors de ce mode, aucune ressource externe.
+- **Sécurité** : tout message reçu est validé (nombres, longueurs, noms nettoyés par `cleanName` avant `innerHTML`).
+- **À ne pas casser** : l'hôte ne place les messages/sons dans `evq` que si `net.live` ; `backToMenu` côté hôte ramène à la salle (`goLobby`), pas au menu.
