@@ -60,3 +60,7 @@ Chaque décision : le choix, la raison, et ce qu'il ne faut pas casser. Ajouter 
 - **Exception à D1** : PeerJS est chargé à la demande depuis jsDelivr (version fixée, empreinte SRI). Hors de ce mode, aucune ressource externe.
 - **Sécurité** : tout message reçu est validé (nombres, longueurs, noms nettoyés par `cleanName` avant `innerHTML`).
 - **À ne pas casser** : l'hôte ne place les messages/sons dans `evq` que si `net.live` ; `backToMenu` côté hôte ramène à la salle (`goLobby`), pas au menu.
+
+## D14 — Liste publique sans serveur (branche `jeu-en-ligne-liste`)
+- **Choix** : registre tenu par un hôte (id PeerJS fixe). Inscriptions expirées après 15 s. Les entrées reçues sont validées (`cleanRooms`).
+- **Limites** : la liste est vide si aucun hôte public n'est en ligne ; le tenant du registre voit les IP des visiteurs de la liste ; un tricheur peut inscrire de fausses salles. Pour du solide : un petit serveur ou une base gratuite (Firebase, Supabase).

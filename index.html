@@ -250,12 +250,16 @@ button:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
       <div class="codebig" id="onCode" hidden></div>
       <div class="info" id="onS"></div>
       <div class="small" id="onL"></div>
+      <div class="row" id="onR"></div>
       <div class="row" id="onJ"><input class="codein" id="code" maxlength="5" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="CODE" aria-label="Code de la salle"><button class="ghost" id="onJoin">Rejoindre</button></div>
       <div class="row">
         <button class="go" id="onCreate">Créer une salle</button>
         <button class="go" id="onPads">Choisir les commandes</button>
+        <button class="ghost" id="onList">Salles publiques</button>
+        <button class="ghost" id="onPub">Salle publique : non</button>
         <button class="ghost" id="onCopy">Copier le lien</button>
         <button class="ghost" id="onBack">Retour</button>
+        <button class="ghost" id="onLBack">Retour</button>
         <button class="ghost" id="onLeave">Quitter la salle</button>
       </div>
       <div class="small" id="onLink"></div>
@@ -1007,7 +1011,7 @@ if(document.fullscreenEnabled){$('fs').hidden=false;
 // Hôte autoritaire : l'hôte fait tourner tout le jeu, les invités envoient leurs touches et reçoivent des instantanés (voir D13).
 const PEER_SRC='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PEER_SRI='sha384-nlUQ8ZqCbvStErob+biJNzSgltf6urV3VGqhfIfzhmg9RXmpeRm76ELw0pYnKlTR';
 const CODE_CH='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',PREFIX='turfhockey26-';
-const net={role:'off',view:'choose',peer:null,code:'',conns:[null,null,null,null],conn:null,slot:0,err:'',msg:'',last:0,sT:0,iT:0,pAcc:0,hNow:0,mx:0,my:0,live:false,lobby:null,to:null,hostClosed:false};
+const net={role:'off',view:'choose',peer:null,code:'',conns:[null,null,null,null],conn:null,pub:false,regT:0,slot:0,err:'',msg:'',last:0,sT:0,iT:0,pAcc:0,hNow:0,mx:0,my:0,live:false,lobby:null,to:null,hostClosed:false};
 let evq=[],gmode=null,gSig='',gA=null,gB=null,gT0=0,gDur=50,gLast=0,mnoteT=0;
 const num=(v,d)=>Number.isFinite(+v)?+v:(d||0);
 const r2=v=>Math.round(v*100)/100,r1=v=>Math.round(v*10)/10;
@@ -1031,7 +1035,7 @@ function errText(e){const t=e&&e.type;
   if(t==='network'||t==='server-error'||t==='socket-error'||t==='socket-closed')return "Le serveur de salles est injoignable (internet coupé ? ce mode ne marche pas dans l'aperçu Claude, seulement sur la page publiée).";
   if(t==='webrtc')return 'Connexion directe impossible (pare-feu ou réseau d’entreprise ?).';
   return 'Erreur de connexion'+(t?' ('+t+')':'')+'.'}
-function netReset(){clearTimeout(net.to);const p=net.peer,c=net.conn;net.peer=null;net.conn=null;
+function netReset(){regStop();listStop();net.pub=false;clearTimeout(net.to);const p=net.peer,c=net.conn;net.peer=null;net.conn=null;
   try{c&&c.close()}catch(e){}try{p&&p.destroy()}catch(e){}
   for(let s=1;s<4;s++){net.conns[s]=null;delete devPos['net'+s];delete NETIN['net'+s];delete DS['net'+s]}
   net.role='off';net.view='choose';net.live=false;net.lobby=null;net.hostClosed=false;evq=[]}
@@ -1197,14 +1201,59 @@ function guestUpdate(dt){
     else if(breakT>.8&&ANY.okP)activate()}
   else if(ANY.startP&&!needRotate())openLocalPause();
   guestAnimate()}
+// --- liste publique : un hôte tient le registre (pair « registre »), les autres s'y inscrivent ---
+const REG_ID=PREFIX+'registre',lst={peer:null,conn:null,rooms:null,t:0,err:''};
+const reg={peer:null,conn:null,hold:false,ok:false,busy:false,rooms:new Map()};
+const roomInfo=()=>{const n=lobbyNames().length;return {code:net.code,mode:opts.mode,lvl:opts.lvl,dur:opts.dur,n,open:(state==='online'||state==='pads')&&n<4}};
+const cleanRooms=a=>a.slice(0,40).filter(r=>r&&/^[A-HJ-NP-Z2-9]{5}$/.test(r.code)).map(r=>({code:r.code,mode:MODES[r.mode]?r.mode:'grass',lvl:LEVELS[r.lvl]?r.lvl:2,dur:DURS[r.dur]?r.dur:1,n:clamp(Math.trunc(num(r.n,1)),1,4),open:!!r.open}));
+function regStop(){const p=reg.peer;reg.peer=null;reg.conn=null;reg.hold=reg.ok=reg.busy=false;reg.rooms.clear();try{p&&p.destroy()}catch(e){}}
+function regUnlist(){if(!reg.ok||!net.code)return;if(reg.hold)reg.rooms.delete(net.code);else sendTo(reg.conn,{t:'del',code:net.code})}
+function regSend(){if(!reg.ok||net.role!=='host'||!net.pub)return;const r=roomInfo();
+  if(reg.hold)reg.rooms.set(r.code,Object.assign({},r,{at:performance.now(),c:null}));else sendTo(reg.conn,Object.assign({t:'reg'},r))}
+function regData(c,m){if(!m||typeof m!=='object')return;
+  if(m.t==='reg'){const r=cleanRooms([m])[0];if(!r||(reg.rooms.size>=60&&!reg.rooms.has(r.code)))return;reg.rooms.set(r.code,Object.assign(r,{at:performance.now(),c}));c._codes.add(r.code)}
+  else if(m.t==='del'){const r=reg.rooms.get(String(m.code));if(r&&r.c===c)reg.rooms.delete(r.code)}
+  else if(m.t==='list'){const now=performance.now();for(const [k,r] of reg.rooms)if(now-r.at>15000)reg.rooms.delete(k);
+    sendTo(c,{t:'rooms',rooms:[...reg.rooms.values()].map(r=>({code:r.code,mode:r.mode,lvl:r.lvl,dur:r.dur,n:r.n,open:r.open}))})}}
+async function regEnsure(){
+  if(reg.peer||reg.busy)return;reg.busy=true;
+  try{await loadPeer()}catch(e){reg.busy=false;return}
+  if(net.role!=='host'||!net.pub){reg.busy=false;return}
+  const p=new Peer(REG_ID,peerOpts());reg.peer=p;
+  p.on('open',()=>{if(reg.peer!==p)return;reg.busy=false;reg.hold=true;reg.ok=true;regSend()});
+  p.on('connection',c=>{c._codes=new Set();c.on('data',m=>regData(c,m));
+    c.on('close',()=>{for(const k of c._codes){const r=reg.rooms.get(k);if(r&&r.c===c)reg.rooms.delete(k)}})});
+  p.on('error',e=>{if(reg.peer!==p)return;
+    if(e.type==='unavailable-id'){try{p.destroy()}catch(x){}
+      const q=new Peer(peerOpts());reg.peer=q;
+      q.on('open',()=>{if(reg.peer!==q)return;const c=q.connect(REG_ID,{reliable:true,serialization:'json'});reg.conn=c;
+        c.on('open',()=>{reg.busy=false;reg.ok=true;regSend()});
+        c.on('close',()=>{if(reg.conn===c)regStop()});c.on('error',()=>{if(reg.conn===c)regStop()})});
+      q.on('error',()=>{if(reg.peer===q)regStop()})}
+    else regStop()})}
+function listStop(){const p=lst.peer;lst.peer=null;lst.conn=null;try{p&&p.destroy()}catch(e){}}
+async function listFetch(){
+  listStop();lst.t=performance.now();
+  try{await loadPeer()}catch(e){lst.err='Impossible de charger le service en ligne.';lst.rooms=lst.rooms||[];renderOnline();return}
+  if(net.view!=='list')return;
+  const p=new Peer(peerOpts());lst.peer=p;
+  const fail=()=>{if(lst.peer!==p)return;lst.rooms=lst.rooms||[];lst.t=performance.now();listStop();renderOnline()};
+  setTimeout(()=>{if(lst.peer===p)fail()},8000);
+  p.on('error',fail);
+  p.on('open',()=>{if(lst.peer!==p)return;const c=p.connect(REG_ID,{reliable:true,serialization:'json'});lst.conn=c;
+    c.on('open',()=>sendTo(c,{t:'list'}));c.on('error',fail);
+    c.on('data',m=>{if(lst.peer!==p||!m||m.t!=='rooms'||!Array.isArray(m.rooms))return;lst.rooms=cleanRooms(m.rooms);lst.err='';lst.t=performance.now();listStop();renderOnline()})})}
 // --- écran « en ligne » ---
 function goOnline(){btnFocus=0;state='online';net.view=net.role==='host'?'host':net.role==='guest'?net.view:'choose';hideScreens();$('online').hidden=false;mnote('');renderOnline()}
 function renderOnline(){
   if(state!=='online'&&!(net.role!=='off'))return;
   const v=net.view,hostv=v==='host',L_=net.lobby;let T_='Jouer en ligne',N_='',ids=[],S_='',L2='';
-  if(v==='choose'){N_=net.err||"Crée une salle et donne le code à tes amis, ou entre le code reçu pour rejoindre. L'hôte décide du mode, du niveau et de la durée dans son menu.";ids=['onCreate','onJoin','onBack']}
+  if(v==='choose'){N_=net.err||"Crée une salle et donne le code à tes amis, ou entre le code reçu pour rejoindre. L'hôte décide du mode, du niveau et de la durée dans son menu.";ids=['onCreate','onJoin','onList','onBack']}
+  else if(v==='list'){T_='Salles publiques';const rs=lst.rooms;
+    N_=lst.err||(rs===null?'Recherche des salles…':rs.length?'Touche une salle pour la rejoindre. La liste se met à jour toute seule.':"Aucune salle publique pour le moment. Crée la tienne et rends-la publique !");
+    rs&&rs.slice(0,8).forEach((r,i)=>{if(r.open)ids.push('rm'+i)});ids.push('onLBack')}
   else if(v==='conn'){T_='Connexion…';N_=net.msg;ids=['onLeave']}
-  else if(hostv){T_='Salle ouverte';N_="Donne le code ou le lien à tes amis : ils le saisissent sur cette même page (jusqu'à 4 joueurs en tout). Quand tout le monde est là, choisis les commandes puis lance le match.";ids=['onPads','onCopy','onLeave'];
+  else if(hostv){T_='Salle ouverte';N_="Donne le code ou le lien à tes amis : ils le saisissent sur cette même page (jusqu'à 4 joueurs en tout). Quand tout le monde est là, choisis les commandes puis lance le match.";ids=['onPads','onPub','onCopy','onLeave'];
     S_=MODES[opts.mode].label+' · IA '+LEVELS[opts.lvl].name+' · '+DURS[opts.dur].name;L2='Dans la salle : '+lobbyNames().join(', ')+' ('+lobbyNames().length+'/4)'}
   else{T_='Salle '+net.code;ids=['onLeave'];
     if(L_){S_=MODES[L_.mode].label+' · IA '+LEVELS[L_.lvl].name+' · '+DURS[L_.dur].name;L2='Dans la salle : '+L_.nm.join(', ');
@@ -1216,12 +1265,15 @@ function renderOnline(){
   $('onLink').textContent=hostv?netLink():'';
   $('onJ').hidden=v!=='choose';
   $('onLeave').textContent=v==='conn'?'Annuler':'Quitter la salle';
-  for(const id of ['onCreate','onJoin','onBack','onPads','onCopy','onLeave'])$(id).hidden=!ids.includes(id);
+  for(const id of ['onCreate','onJoin','onBack','onPads','onCopy','onLeave','onList','onLBack','onPub'])$(id).hidden=!ids.includes(id);
+  $('onPub').textContent='Salle publique : '+(net.pub?'oui':'non');
+  const rs=v==='list'&&lst.rooms?lst.rooms.slice(0,8):[];
+  for(let i=0;i<8;i++){const b=$('rm'+i),r=rs[i];b.hidden=!r;if(r){b.textContent=MODES[r.mode].label+' · IA '+LEVELS[r.lvl].name+' · '+DURS[r.dur].name+' — '+r.n+'/4'+(r.open?'':' · en cours');b.disabled=!r.open;b.dataset.code=r.code}}
   $('onJoin').hidden=v!=='choose';
   BTNS.online=ids;if(btnFocus>=ids.length)btnFocus=0;renderBtns()}
 const netLink=()=>{try{return location.origin+location.pathname+'?salle='+net.code}catch(e){return '?salle='+net.code}};
 function onlineInput(){
-  if(net.view==='choose'&&ANY.backP&&document.activeElement!==$('code'))return toMenu0();
+  if(ANY.backP&&document.activeElement!==$('code')){if(net.view==='choose')return toMenu0();if(net.view==='list')return $('onLBack').click()}
   navBtns(true);if(ANY.okP)activate();
   if(net.role==='host')renderBtns()}
 $('onCreate').onclick=netCreate;
@@ -1229,12 +1281,19 @@ $('onJoin').onclick=()=>netJoin($('code').value);
 $('code').addEventListener('keydown',e=>{if(e.key==='Enter')netJoin($('code').value)});
 $('code').addEventListener('input',e=>{e.target.value=e.target.value.toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,5)});
 $('onBack').onclick=toMenu0;
+$('onR').innerHTML=Array.from({length:8},(_,i)=>'<button class="ghost" id="rm'+i+'" hidden></button>').join('');
+for(let i=0;i<8;i++)$('rm'+i).onclick=e=>netJoin(e.currentTarget.dataset.code);
+$('onList').onclick=()=>{lst.rooms=null;lst.err='';lst.t=0;net.view='list';btnFocus=0;renderOnline();listFetch()};
+$('onLBack').onclick=()=>{listStop();net.view='choose';btnFocus=0;renderOnline()};
+$('onPub').onclick=()=>{net.pub=!net.pub;if(net.pub)net.regT=0;else regUnlist();renderOnline()};
 $('onPads').onclick=goPads;
 $('onLeave').onclick=()=>{if(net.view==='conn'){netReset();net.err='';goOnline();renderOnline()}else netClose('')};
 $('onCopy').onclick=()=>{const l=netLink();try{navigator.clipboard.writeText(l).then(()=>{$('onCopy').textContent='Lien copié !';setTimeout(()=>{$('onCopy').textContent='Copier le lien'},1800)},()=>{})}catch(e){}};
 $('gmResume').onclick=closeLocalPause;
 $('gmQuit').onclick=()=>netClose('');
 function netTick(now){
+  if(net.view==='list'&&net.role==='off'&&!lst.peer&&now-lst.t>4000)listFetch();
+  if(net.role==='host'&&now-net.regT>5000){net.regT=now;if(net.pub){regEnsure();regSend()}}
   if(net.role==='host'){
     for(let s=1;s<4;s++){const c=net.conns[s];if(c&&now-c.last>10000)dropSlot(s)}
     if(net.live){

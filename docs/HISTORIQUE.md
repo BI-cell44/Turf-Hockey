@@ -4,6 +4,10 @@ Chronologie des demandes de l'utilisateur et de ce qui a été livré. Les numé
 
 ---
 
+## 16/11/2026 — Jeu en ligne avec liste publique (branche `jeu-en-ligne-liste`, partie de `jeu-en-ligne`)
+- Demande : « une autre version avec liste publique ».
+- L'hôte peut rendre sa salle publique (bouton « Salle publique »). « Salles publiques » dans le menu en ligne affiche les salles ouvertes et permet de les rejoindre. Sans serveur : le premier hôte public tient le registre (pair PeerJS `turfhockey26-registre`), les autres s'y inscrivent toutes les 5 s ; si le tenant part, un autre prend le relais. Test : `tests/online_list_test.js`.
+
 ## 16/11/2026 — Jeu en ligne (branche `jeu-en-ligne`, pas encore fusionnée dans `main`)
 - Demande : jeu en ligne pour ceux qui ouvrent la page publiée. Choix de l'utilisateur : code de salle, jusqu'à 4 joueurs. Demande de travailler sur une branche à part.
 - Menu : bouton « Jouer en ligne » → créer une salle (code à 5 caractères + lien `?salle=CODE`) ou rejoindre. Salle d'attente, placement des commandes par l'hôte, match, pause/mi-temps/fin visibles côté invités.
