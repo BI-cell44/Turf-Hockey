@@ -22,6 +22,9 @@ Ouvre `index.html` dans Chrome, Edge ou Firefox (double-clic, aucune installatio
 
 Règle du cercle : un but ne compte que si le tir part du cercle (la zone en D devant le but).
 
+## Jeu en ligne
+Bouton « Jouer en ligne » : crée une salle (code ou lien) et jusqu'à 3 amis la rejoignent depuis la même page publiée. Ne fonctionne pas dans l'aperçu Artifact de claude.ai.
+
 ## Développement
 Voir `CLAUDE.md` et le dossier `docs/` (état, historique, backlog, décisions techniques).
 Test rapide : `node tests/smoke_test.js` (nécessite Playwright).

@@ -8,6 +8,8 @@ Quand un élément est terminé, le retirer d'ici et l'ajouter dans `HISTORIQUE.
 - **P1 — Tir chargé** : la demande « quand on a chargé le tir la balle part et ne peut pas rester chargée » a été interprétée comme « tir automatique quand la jauge est pleine ». Si l'utilisateur voulait l'inverse (garder la jauge pleine tant que le bouton est tenu), retirer le bloc `p.full` dans `humanControl`.
 - **P1 — Manettes réelles** : faire confirmer que la détection, la navigation des menus et les boutons répondent bien avec ses manettes (modèle et navigateur ?).
 
+- **P1 — Jeu en ligne sur vrais appareils** : tester hôte + invités sur internet réel (latence, connexions refusées), puis fusionner la branche `jeu-en-ligne`.
+
 ## Gameplay
 - P2 — Corners de pénalité (penalty corners) et pénalty (stroke) : règles majeures du hockey absentes.
 - P2 — Fautes : obstruction, pied, crosse haute → coups francs.
@@ -28,6 +30,7 @@ Quand un élément est terminé, le retirer d'ici et l'ajouter dans `HISTORIQUE.
 - P3 — Personnalisation des touches (utile pour les manettes non standard).
 
 ## Technique
+- P2 — En ligne : prédiction du mouvement côté invité, serveur TURN pour les réseaux stricts, choix des réglages depuis la salle, noms de joueurs.
 - P2 — Mobile : retour haptique (vibration) sur tir et but, option gaucher (inverser joystick et boutons), taille des boutons réglable.
 - P3 — Mode 2 joueurs sur un même écran tactile (un joystick par côté).
 - P3 — Séparer le JS en modules si le fichier dépasse ~1500 lignes (en gardant une version un-seul-fichier pour l'Artifact).
