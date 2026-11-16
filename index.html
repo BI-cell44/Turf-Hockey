@@ -145,7 +145,7 @@ button:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
 #tdiam [data-b=shoot]{left:0;top:var(--g)}
 #tdiam [data-b=through]{left:var(--g);top:0}
 #tsh{position:absolute;right:calc(max(20px,env(safe-area-inset-right,0px)) + 6px);bottom:calc(32px + env(safe-area-inset-bottom,0px) + var(--b) + var(--g)*2);display:flex;gap:8px}
-.tb.tw{position:static;width:auto;height:38px;padding:0 14px;border-radius:19px;background:rgba(238,243,251,.8);font:600 13px var(--f-body)}
+.tb.tw{display:inline-flex;flex-direction:row;align-items:center;justify-content:center;gap:6px;position:static;width:auto;height:38px;padding:0 14px;border-radius:19px;background:rgba(238,243,251,.8);font:600 13px var(--f-body)}
 .tb.tp{top:calc(10px + env(safe-area-inset-top,0px));left:max(12px,env(safe-area-inset-left,0px));width:44px;height:44px;background:rgba(8,17,31,.75);color:var(--ink);border-color:rgba(255,255,255,.45);font-size:15px}
 #game.nohud .board,#game.nohud #mini,#game.nohud .hint{display:none}
 #game.touch .hint{display:none}
@@ -185,10 +185,10 @@ button:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
     <div id="jbase"><i id="jthumb"></i></div>
     <button type="button" class="tb tp" data-b="start" aria-label="Pause">II</button>
     <div id="tsh">
-      <button type="button" class="tb tw" data-b="sw">Changer</button>
+      <button type="button" class="tb tw" data-b="sw"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><path d="M20 12a8 8 0 0 0-13.6-5.7L4 8.7"/><path d="M4 4v4.7h4.7"/><path d="M4 12a8 8 0 0 0 13.6 5.7l2.4-2.4"/><path d="M20 20v-4.7h-4.7"/></svg>Changer</button>
     </div>
     <div id="tdiam">
-      <button type="button" class="tb pA" data-b="pass"><b>A</b><small>Passe</small></button>
+      <button type="button" class="tb pA" data-b="pass"><b>A</b><small>Passe /<br>Prise</small></button>
       <button type="button" class="tb pB" data-b="lob"><b>B</b><small id="tbB">Aér.</small></button>
       <button type="button" class="tb pX" data-b="shoot"><b>X</b><small>Tir</small></button>
       <button type="button" class="tb pY" data-b="through"><b>Y</b><small>Prof.</small></button>

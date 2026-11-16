@@ -4,6 +4,9 @@ Chronologie des demandes de l'utilisateur et de ce qui a été livré. Les numé
 
 ---
 
+## 16/11/2026 — Boutons tactiles plus clairs
+- Icône à deux flèches circulaires sur « Changer » ; libellé du bouton A : « Passe / Prise » (en défense, A sert à prendre la balle).
+
 ## 16/11/2026 — Sprint automatique sur mobile
 - Demande : sprint automatique quand le pouce est au bord du joystick, et suppression du bouton. Le sprint s'active quand le pouce dépasse 88 % du rayon du joystick et se coupe sous 75 % (hystérésis). Le pouce du joystick devient orange quand le sprint est actif. Bouton « Sprint » retiré de l'écran tactile ; manette et clavier inchangés.
 
