@@ -4,6 +4,9 @@ Chronologie des demandes de l'utilisateur et de ce qui a été livré. Les numé
 
 ---
 
+## 16/11/2026 — Menu : plus de saut de mise en page
+- Retour : « il faut cliquer sous les boutons ». Les zones cliquables étaient bonnes, mais le texte de description du mode changeait de hauteur (2 → 3 lignes) et le menu, centré, se décalait d'environ 11 px à chaque clic. Les deux descriptions sont maintenant superposées (hauteur fixe).
+
 ## 16/11/2026 — Correctif connexion Firefox mobile (hypothèse)
 - Retour : ça marche sur Chrome mais pas Firefox sur téléphone (« l'hôte a refusé »). Non reproductible ici (pas de Firefox). Ajout de serveurs STUN supplémentaires (Google, Cloudflare, Twilio) et d'un message d'erreur détaillé. Si ça persiste : serveur TURN (voir BACKLOG).
 - Ajout d'un message vert « Connecté » côté invité.

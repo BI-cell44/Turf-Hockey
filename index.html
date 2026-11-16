@@ -120,6 +120,7 @@ button:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
 .codein{font:800 30px var(--f-disp);letter-spacing:.25em;text-transform:uppercase;width:6.5em;padding:6px 10px;border-radius:4px;border:1px solid var(--line);
   background:var(--panel);color:var(--ink);text-align:center;user-select:text;-webkit-user-select:text}
 .codebig{font-family:var(--f-disp);font-weight:800;font-size:clamp(56px,14vw,110px);letter-spacing:.14em;color:var(--accent);line-height:.9}
+#modeDesc{display:grid}#modeDesc span{grid-area:1/1}#modeDesc span.off{visibility:hidden}
 .rule.bad{color:var(--bad)}
 .rule.ok{color:#5fd068;font-weight:600;font-size:16px}
 .note{font-size:14px;font-weight:600;color:var(--accent)}
@@ -747,6 +748,7 @@ const OPTS=[
   {k:'dur',lab:'Durée du match',vals:[0,1,2],txt:v=>DURS[v].name+' · '+Math.round(DURS[v].s/60)+' min'},
   {k:'guide',lab:'Pointillés en salle',vals:[1,0],txt:v=>v?'Affichés':'Masqués'}];
 let menuFocus=0;
+$('modeDesc').innerHTML=Object.keys(MODES).map(k=>'<span data-m="'+k+'">'+MODES[k].desc+'</span>').join('');
 $('opts').innerHTML=OPTS.map((o,i)=>'<div class="opt" id="o'+i+'"><div class="ol">'+o.lab+'</div><div class="seg" role="radiogroup" aria-label="'+o.lab+'">'+
   o.vals.map(v=>'<button type="button" data-o="'+i+'" data-v="'+v+'">'+o.txt(v)+'</button>').join('')+'</div></div>').join('');
 $('opts').addEventListener('click',e=>{const b=e.target.closest('button[data-o]');if(!b)return;const o=OPTS[+b.dataset.o];menuFocus=+b.dataset.o;
@@ -756,7 +758,7 @@ function renderMenu(){
   OPTS.forEach((o,i)=>{$('o'+i).classList.toggle('f',menuFocus===i);
     $('o'+i).querySelectorAll('button').forEach(b=>{const on=String(opts[o.k])===b.dataset.v;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)})});
   $('toPads').classList.toggle('f',menuFocus===OPTS.length);$('onl').classList.toggle('f',menuFocus===OPTS.length+1);
-  $('modeDesc').textContent=MODES[opts.mode].desc;
+  $('modeDesc').querySelectorAll('span').forEach(e=>e.classList.toggle('off',e.dataset.m!==opts.mode));
 }
 function menuInput(){
   if(ANY.upP)menuFocus=Math.max(0,menuFocus-1);
