@@ -1025,7 +1025,8 @@ function mnote(t){const el=$('mnote');el.textContent=t||'';el.hidden=!t;clearTim
 function loadPeer(){return new Promise((ok,ko)=>{if(window.Peer)return ok();
   const s=document.createElement('script');s.src=PEER_SRC;s.integrity=PEER_SRI;s.crossOrigin='anonymous';
   s.onload=()=>window.Peer?ok():ko();s.onerror=()=>ko();document.head.appendChild(s)})}
-const peerOpts=()=>Object.assign({debug:0},window.TH26_PEER_CONFIG||{});
+const ICE=[{urls:['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302','stun:stun2.l.google.com:19302']},{urls:'stun:stun.cloudflare.com:3478'},{urls:'stun:global.stun.twilio.com:3478'}];
+const peerOpts=()=>Object.assign({debug:0,config:{iceServers:ICE}},window.TH26_PEER_CONFIG||{});
 function newCode(){const a=new Uint8Array(5);try{crypto.getRandomValues(a)}catch(e){for(let i=0;i<5;i++)a[i]=Math.random()*256}return Array.from(a,v=>CODE_CH[v%CODE_CH.length]).join('')}
 function errText(e){const t=e&&e.type;
   if(t==='peer-unavailable')return 'Salle introuvable : vérifie le code.';
@@ -1120,8 +1121,9 @@ async function netJoin(raw){
     const c=p.connect(PREFIX+code,{reliable:true,serialization:'json'});net.conn=c;
     c.on('open',()=>{net.last=performance.now()});
     c.on('data',m=>guestData(c,m));
-    const gone=()=>{if(net.conn!==c)return;if(net.view==='conn')netFail("La salle n'a pas accepté la connexion.");else netClose(net.hostClosed?"L'hôte a fermé la salle.":'Connexion perdue avec l’hôte.')};
-    c.on('close',gone);c.on('error',gone)});
+    const gone=e=>{if(net.conn!==c)return;const d=e&&(e.type||e.message)?' [détail : '+String(e.type||e.message).slice(0,80)+']':'';
+      if(net.view==='conn')netFail("La connexion avec l'hôte a été coupée avant d'aboutir"+d+". Réessaie ; sinon essaie un autre navigateur ou le même Wi-Fi que l'hôte.");else netClose(net.hostClosed?"L'hôte a fermé la salle.":'Connexion perdue avec l’hôte.')};
+    c.on('close',()=>gone());c.on('error',gone)});
 }
 function guestData(c,m){if(net.conn!==c||!m||typeof m!=='object')return;net.last=performance.now();
   switch(m.t){

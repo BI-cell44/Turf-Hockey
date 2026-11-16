@@ -10,6 +10,8 @@ Quand un élément est terminé, le retirer d'ici et l'ajouter dans `HISTORIQUE.
 
 - **P1 — Jeu en ligne sur vrais appareils** : tester hôte + invités sur internet réel (latence, connexions refusées), puis fusionner la branche `jeu-en-ligne`.
 
+- **P1 — Firefox mobile** : connexion en ligne échouée (Chrome OK). Voir si le correctif STUN suffit, sinon ajouter un serveur TURN.
+
 ## Gameplay
 - P2 — Corners de pénalité (penalty corners) et pénalty (stroke) : règles majeures du hockey absentes.
 - P2 — Fautes : obstruction, pied, crosse haute → coups francs.

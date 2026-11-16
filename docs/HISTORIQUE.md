@@ -4,6 +4,10 @@ Chronologie des demandes de l'utilisateur et de ce qui a été livré. Les numé
 
 ---
 
+## 16/11/2026 — Correctif connexion Firefox mobile (hypothèse)
+- Retour : ça marche sur Chrome mais pas Firefox sur téléphone (« l'hôte a refusé »). Non reproductible ici (pas de Firefox). Ajout de serveurs STUN supplémentaires (Google, Cloudflare, Twilio) et d'un message d'erreur détaillé. Si ça persiste : serveur TURN (voir BACKLOG).
+- Ajout d'un message vert « Connecté » côté invité.
+
 ## 16/11/2026 — Jeu en ligne (branche `jeu-en-ligne`, pas encore fusionnée dans `main`)
 - Demande : jeu en ligne pour ceux qui ouvrent la page publiée. Choix de l'utilisateur : code de salle, jusqu'à 4 joueurs. Demande de travailler sur une branche à part.
 - Menu : bouton « Jouer en ligne » → créer une salle (code à 5 caractères + lien `?salle=CODE`) ou rejoindre. Salle d'attente, placement des commandes par l'hôte, match, pause/mi-temps/fin visibles côté invités.
