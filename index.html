@@ -121,6 +121,7 @@ button:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
   background:var(--panel);color:var(--ink);text-align:center;user-select:text;-webkit-user-select:text}
 .codebig{font-family:var(--f-disp);font-weight:800;font-size:clamp(56px,14vw,110px);letter-spacing:.14em;color:var(--accent);line-height:.9}
 .rule.bad{color:var(--bad)}
+.rule.ok{color:#5fd068;font-weight:600;font-size:16px}
 .note{font-size:14px;font-weight:600;color:var(--accent)}
 /* ---- Commandes tactiles (téléphone / tablette) ---- */
 #game{--b:58px;--g:48px}
@@ -1208,9 +1209,9 @@ function renderOnline(){
     S_=MODES[opts.mode].label+' · IA '+LEVELS[opts.lvl].name+' · '+DURS[opts.dur].name;L2='Dans la salle : '+lobbyNames().join(', ')+' ('+lobbyNames().length+'/4)'}
   else{T_='Salle '+net.code;ids=['onLeave'];
     if(L_){S_=MODES[L_.mode].label+' · IA '+LEVELS[L_.lvl].name+' · '+DURS[L_.dur].name;L2='Dans la salle : '+L_.nm.join(', ');
-      N_=L_.pl?"L'hôte place les joueurs. Pousse ton stick à gauche (oranges) ou à droite (blancs). Ton camp : "+(L_.sd<0?'oranges':L_.sd>0?'blancs':'tu ne joues pas')+'.':"En attente de l'hôte…"}
-    else N_="En attente de l'hôte…"}
-  $('onT').textContent=T_;$('onN').textContent=N_;$('onN').className='rule'+(v==='choose'&&net.err?' bad':'');
+      N_=L_.pl?"✓ Connecté · l'hôte place les joueurs. Pousse ton stick à gauche (oranges) ou à droite (blancs). Ton camp : "+(L_.sd<0?'oranges':L_.sd>0?'blancs':'tu ne joues pas')+'.':"✓ Connecté · en attente du lancement de la partie par l'hôte"}
+    else N_="✓ Connecté · en attente du lancement de la partie par l'hôte"}
+  $('onT').textContent=T_;$('onN').textContent=N_;$('onN').className='rule'+(v==='choose'&&net.err?' bad':v==='guest'?' ok':'');
   $('onS').textContent=S_;$('onL').textContent=L2;
   $('onCode').hidden=!(hostv);$('onCode').textContent=hostv?net.code:'';
   $('onLink').textContent=hostv?netLink():'';
