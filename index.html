@@ -332,8 +332,8 @@ const DURS=[{name:'Courte',s:240},{name:'Normale',s:420},{name:'Longue',s:720}];
 const HCOL=['#ffd23f','#4fd1ff','#ff6fb5','#8cf06a'];
 
 let opts;
-function loadOpts(){opts={mode:'grass',lvl:2,dur:1,guide:1};
-  try{const s=JSON.parse(localStorage.getItem('th26opts')||'null');if(s&&MODES[s.mode]&&LEVELS[s.lvl]&&DURS[s.dur])opts=Object.assign(opts,s);if(opts.guide!==0)opts.guide=1}catch(e){}}
+function loadOpts(){opts={mode:'grass',lvl:2,dur:1,guide:1,auto:1};
+  try{const s=JSON.parse(localStorage.getItem('th26opts')||'null');if(s&&MODES[s.mode]&&LEVELS[s.lvl]&&DURS[s.dur])opts=Object.assign(opts,s);if(opts.guide!==0)opts.guide=1;if(opts.auto!==0)opts.auto=1}catch(e){}}
 loadOpts();
 const saveOpts=()=>{try{localStorage.setItem('th26opts',JSON.stringify(opts))}catch(e){}};
 
@@ -736,8 +736,12 @@ function sim(dt){
   if(freeze<=0)for(const h of humans){
     if(!h.p)continue;const inp=IN[h.dev]||NOIN,t=h.t;
     if(inp.swP&&ball.owner!==h.p){const b=freeNearest(t,ball.x,ball.y);if(b)setCtrl(h,b)}
-    else if(teamH[t].length===1&&(!ball.owner||ball.owner.t!==t)&&ball.target!==h.p){
-      const c=freeNearest(t,ball.x,ball.y);if(c&&dist(h.p,ball)>20*S2&&dist(c,ball)<dist(h.p,ball)-10*S2)setCtrl(h,c)}
+    else if(teamH[t].length===1&&(!ball.owner||ball.owner.t!==t)&&ball.target!==h.p&&!(ball.target&&ball.target.t===t)){
+      // changement automatique : en défense (balle à l'adversaire ou libre), on prend le joueur libre le plus proche de la balle
+      h.swT=(h.swT||0)-dt;const c=freeNearest(t,ball.x,ball.y);
+      if(c&&c!==h.p){
+        if(opts.auto){if(h.swT<=0&&dist(c,ball)<dist(h.p,ball)-3*S2){setCtrl(h,c);h.swT=1}}
+        else if(dist(h.p,ball)>20*S2&&dist(c,ball)<dist(h.p,ball)-10*S2)setCtrl(h,c)}}
   }
 }
 
@@ -746,7 +750,8 @@ const OPTS=[
   {k:'mode',lab:'Mode de jeu',vals:['grass','indoor'],txt:v=>MODES[v].label},
   {k:'lvl',lab:"Niveau de l'IA",vals:[0,1,2,3,4],txt:v=>LEVELS[v].name},
   {k:'dur',lab:'Durée du match',vals:[0,1,2],txt:v=>DURS[v].name+' · '+Math.round(DURS[v].s/60)+' min'},
-  {k:'guide',lab:'Pointillés en salle',vals:[1,0],txt:v=>v?'Affichés':'Masqués'}];
+  {k:'guide',lab:'Pointillés en salle',vals:[1,0],txt:v=>v?'Affichés':'Masqués'},
+  {k:'auto',lab:'Changement auto en défense',vals:[1,0],txt:v=>v?'Activé':'Désactivé'}];
 let menuFocus=0;
 $('modeDesc').innerHTML=Object.keys(MODES).map(k=>'<span data-m="'+k+'">'+MODES[k].desc+'</span>').join('');
 $('opts').innerHTML=OPTS.map((o,i)=>'<div class="opt" id="o'+i+'"><div class="ol">'+o.lab+'</div><div class="seg" role="radiogroup" aria-label="'+o.lab+'">'+

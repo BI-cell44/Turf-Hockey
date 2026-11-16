@@ -25,7 +25,7 @@ Chaque décision : le choix, la raison, et ce qu'il ne faut pas casser. Ajouter 
 
 ## D6 — Contrôle humain par pointeur `ctrl`
 - **Choix** : chaque joueur a `ctrl` = index de l'humain qui le contrôle, ou `null` (IA). `setCtrl(h, p)` garantit qu'un joueur n'a qu'un humain. Le gardien n'est jamais contrôlé par un humain.
-- **Changement automatique** : seulement s'il y a un seul humain dans l'équipe (sinon les humains se « voleraient » les joueurs).
+- **Changement automatique** : seulement s'il y a un seul humain dans l'équipe (sinon les humains se « voleraient » les joueurs). En défense, avec hystérésis (3 m, 1 s) pour éviter le clignotement ; réglage `opts.auto`.
 - **Passe** : `passCtrl` → en coop, le receveur va à un autre humain que le passeur.
 
 ## D7 — Anti-validation accidentelle
