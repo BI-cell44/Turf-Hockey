@@ -4,6 +4,9 @@ Chronologie des demandes de l'utilisateur et de ce qui a été livré. Les numé
 
 ---
 
+## 16/11/2026 — Sprint automatique sur mobile
+- Demande : sprint automatique quand le pouce est au bord du joystick, et suppression du bouton. Le sprint s'active quand le pouce dépasse 88 % du rayon du joystick et se coupe sous 75 % (hystérésis). Le pouce du joystick devient orange quand le sprint est actif. Bouton « Sprint » retiré de l'écran tactile ; manette et clavier inchangés.
+
 ## 16/11/2026 — Changement de joueur automatique en défense
 - Demande (mobile) : changer de joueur automatiquement sans appuyer sur « changer ». L'ancienne règle (balle à plus de 20 m) ne se déclenchait quasiment jamais. Nouvelle règle : quand l'adversaire a la balle (ou balle libre sans passe en cours vers un coéquipier), le joueur contrôlé passe au coéquipier libre le plus proche de la balle s'il est au moins 3 m plus proche, au plus une fois par seconde.
 - Seulement s'il n'y a qu'un humain dans l'équipe (D6). Nouveau réglage dans le menu « Changement auto en défense » (activé par défaut, `opts.auto`).

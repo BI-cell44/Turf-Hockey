@@ -14,6 +14,8 @@ Quand un élément est terminé, le retirer d'ici et l'ajouter dans `HISTORIQUE.
 
 - **P1 — Changement auto** : faire valider le ressenti sur téléphone (seuils 3 m / 1 s dans `sim`, bloc « changement automatique »).
 
+- **P1 — Sprint auto mobile** : faire valider le ressenti sur téléphone (seuils 88 % / 75 % dans `setJ`).
+
 ## Gameplay
 - P2 — Corners de pénalité (penalty corners) et pénalty (stroke) : règles majeures du hockey absentes.
 - P2 — Fautes : obstruction, pied, crosse haute → coups francs.

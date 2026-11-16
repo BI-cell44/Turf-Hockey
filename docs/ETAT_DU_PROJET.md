@@ -78,6 +78,8 @@ Règle commune : **un but ne compte que si un attaquant a touché la balle dans 
 - Appareils `net1..net3` côté hôte (entrées envoyées par les invités). Messages : `w` accueil, `l` salle, `n` début de match, `s` instantané 20 Hz, `u` écran de pause/fin, `i` entrées, `x` refus, `c` fermeture.
 - Limites : pas de liste publique de salles, ~10 % d'échecs de connexion sans serveur TURN, léger retard côté invité, l'hôte doit garder l'onglet visible, les IP sont visibles entre joueurs, courtier PeerJS tiers. Test : `node tests/online_test.js` (serveur local `peer`, voir l'en-tête du fichier).
 
+- Tactile : le sprint n'a plus de bouton ; `setJ` l'active au bord du joystick (`T.sprint`).
+
 ## Carte du code (`index.html`)
 | Section (commentaire `// ----------`) | Contenu principal |
 |---|---|

@@ -162,6 +162,7 @@ button:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
 @media (max-width:640px){.hint{display:none}.board > div{font-size:17px;padding:3px 8px}.sc{font-size:22px!important}}
 @media (max-width:520px){.opt{grid-template-columns:1fr;gap:6px}}
 @media (prefers-reduced-motion:reduce){#msg{transition:none}}
+#jthumb.sp{background:var(--accent);box-shadow:0 0 14px var(--accent)}
 </style>
 </head>
 <body>
@@ -185,7 +186,6 @@ button:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
     <button type="button" class="tb tp" data-b="start" aria-label="Pause">II</button>
     <div id="tsh">
       <button type="button" class="tb tw" data-b="sw">Changer</button>
-      <button type="button" class="tb tw" data-b="sprint">Sprint</button>
     </div>
     <div id="tdiam">
       <button type="button" class="tb pA" data-b="pass"><b>A</b><small>Passe</small></button>
@@ -994,14 +994,16 @@ function hud(){
 const tcEl=$('tc'),jz=$('jz'),jb=$('jbase'),jt=$('jthumb'),JR=56,tmr={};
 let jid=null,jx0=0,jy0=0;
 function needRotate(){return touchOn&&state==='play'&&innerHeight>innerWidth}
-function tReset(){T.mx=T.my=0;for(const k of ['pass','shoot','through','lob','sprint','sw','start'])T[k]=false;jid=null;jt.style.transform='';jb.style.left=jb.style.top=jb.style.bottom='';jb.classList.remove('on');tcEl.querySelectorAll('.tb.on').forEach(e=>e.classList.remove('on'))}
+function tReset(){T.mx=T.my=0;for(const k of ['pass','shoot','through','lob','sprint','sw','start'])T[k]=false;jid=null;jt.style.transform='';jb.style.left=jb.style.top=jb.style.bottom='';jb.classList.remove('on');jt.classList.remove('sp');tcEl.querySelectorAll('.tb.on').forEach(e=>e.classList.remove('on'))}
 function setJ(e){let dx=e.clientX-jx0,dy=e.clientY-jy0;const d=Math.hypot(dx,dy);if(d>JR){dx*=JR/d;dy*=JR/d}
+  // sprint automatique : pouce au bord du joystick (avec hystérésis pour éviter le clignotement)
+  T.sprint=d>=JR*(T.sprint?.75:.88);jt.classList.toggle('sp',T.sprint);
   jt.style.transform='translate('+dx+'px,'+dy+'px)';const m=Math.hypot(dx,dy)/JR;T.mx=m<.15?0:Math.min(1.15,m*1.15)/m*dx/JR;T.my=m<.15?0:Math.min(1.15,m*1.15)/m*dy/JR}
 jz.addEventListener('pointerdown',e=>{if(jid!==null)return;e.preventDefault();jid=e.pointerId;try{jz.setPointerCapture(e.pointerId)}catch(err){}
   jx0=e.clientX;jy0=e.clientY;const R=$('game').getBoundingClientRect();
   jb.style.left=(jx0-R.left-56)+'px';jb.style.top=(jy0-R.top-56)+'px';jb.style.bottom='auto';jb.classList.add('on');setJ(e)});
 jz.addEventListener('pointermove',e=>{if(e.pointerId===jid)setJ(e)});
-const jend=e=>{if(e.pointerId!==jid)return;jid=null;T.mx=T.my=0;jt.style.transform='';jb.style.left=jb.style.top=jb.style.bottom='';jb.classList.remove('on')};
+const jend=e=>{if(e.pointerId!==jid)return;jid=null;T.mx=T.my=0;T.sprint=false;jt.classList.remove('sp');jt.style.transform='';jb.style.left=jb.style.top=jb.style.bottom='';jb.classList.remove('on')};
 for(const ev of ['pointerup','pointercancel','lostpointercapture'])jz.addEventListener(ev,jend);
 for(const el of tcEl.querySelectorAll('.tb')){const b=el.dataset.b;
   el.addEventListener('pointerdown',e=>{e.preventDefault();try{el.setPointerCapture(e.pointerId)}catch(err){}clearTimeout(tmr[b]);T[b]=true;el.classList.add('on');initAudio()});
