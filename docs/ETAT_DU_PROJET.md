@@ -2,6 +2,8 @@
 
 _Dernière mise à jour : 14 novembre 2026 (version 9 de l'Artifact, premier dépôt GitHub)._
 
+**Bandeau des commandes** (`updateHint`) : une ligne par type d'appareil qui joue (manette / clavier 1 / clavier 2).
+
 ## Résumé
 Le jeu est **jouable de bout en bout** : menu → placement des manettes → match (périodes, pauses, statistiques) → écran de fin → rejouer ou menu. Deux modes, cinq niveaux d'IA, jusqu'à 4 joueurs humains en local.
 
