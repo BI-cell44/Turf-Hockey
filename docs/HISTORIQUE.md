@@ -5,7 +5,7 @@ Chronologie des demandes de l'utilisateur et de ce qui a été livré. Les numé
 ---
 
 ## 17/11/2026 — Bandeau des commandes selon les joueurs actifs
-- Le bandeau en bas de l'écran n'affiche que les commandes des appareils qui jouent : une ligne « Manette » (si au moins une manette joue), une ligne « Clavier » (clavier 1, ZQSD + J K I L, avec les flèches si le clavier 2 ne joue pas), une ligne « Clavier 2 » (flèches + pavé numérique). Chaque ligne indique le ou les joueurs concernés (J1, J2…).
+- Le bandeau en bas de l'écran n'affiche que les commandes des appareils qui jouent : une ligne « Manette » (si au moins une manette joue), une ligne « Clavier » (clavier 1, ZQSD + J K I L, avec les flèches si le clavier 2 ne joue pas), une ligne « Clavier 2 » (flèches + pavé numérique). Chaque ligne indique le ou les joueurs concernés (J1, J2…), écrits dans leur couleur de joueur.
 
 ## 16/11/2026 — Boutons tactiles plus clairs
 - Icône à deux flèches circulaires sur « Changer » ; libellé du bouton A : « Passe / Prise » (en défense, A sert à prendre la balle).

@@ -45,7 +45,8 @@ body{background:var(--night);color:var(--ink);font-family:var(--f-body);overflow
 .hint{position:absolute;left:max(12px,env(safe-area-inset-left,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px));
   font-size:12px;color:var(--muted);background:rgba(8,17,31,.72);padding:6px 10px;border-radius:4px;max-width:calc(100% - 210px);line-height:1.5}
 .hint b{color:var(--ink);font-weight:600}
-.hint i{font-style:normal;color:var(--accent);font-weight:600;margin-right:4px}
+.hint i{font-style:normal;font-weight:800;margin-right:4px}
+.hint i.d{color:var(--muted);font-weight:600;margin-right:6px}
 
 .screen{position:absolute;inset:0;display:flex;overflow:auto;touch-action:pan-y;padding-block:24px;z-index:6;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
@@ -893,13 +894,13 @@ $('next').onclick=()=>nextPeriod();$('resume').onclick=resume;$('quit').onclick=
 $('again').onclick=()=>startMatch();$('toMenu').onclick=backToMenu;
 function updateHint(){$('tbB').textContent=M.lob?'Aér.':'Bande';
   // Bandeau des commandes : une ligne par type d'appareil qui joue (manette, clavier 1, clavier 2).
-  const lob=M.lob?'aérienne':'en bande',who=d=>humans.filter(h=>h.dev===d||(d==='p'&&h.dev[0]==='p')).map(h=>h.lab).join('+'),L=[];
+  const lob=M.lob?'aérienne':'en bande',who=d=>humans.filter(h=>h.dev===d||(d==='p'&&h.dev[0]==='p')).map(h=>'<span style="color:'+h.col+'">'+h.lab+'</span>').join('+'),L=[];
   const pw=who('p');
-  if(pw)L.push('<i>'+pw+' · Manette</i> <b>A</b> passe / tacle · <b>X</b> tir (maintenir) · <b>Y</b> profondeur · <b>B</b> '+lob+' · <b>RB</b> sprint · <b>LB</b> changer · <b>Start</b> pause');
+  if(pw)L.push('<i>'+pw+'</i><i class="d">Manette</i> <b>A</b> passe / tacle · <b>X</b> tir (maintenir) · <b>Y</b> profondeur · <b>B</b> '+lob+' · <b>RB</b> sprint · <b>LB</b> changer · <b>Start</b> pause');
   const k1=who('kb1'),ext=!humans.some(h=>h.dev==='kb2');
-  if(k1)L.push('<i>'+k1+' · Clavier</i> <b>ZQSD</b>'+(ext?' / <b>flèches</b>':'')+' · <b>J</b> passe / tacle · <b>K</b> tir · <b>I</b> profondeur · <b>L</b> '+lob+' · <b>Maj</b> sprint · <b>Espace</b> changer · <b>Échap</b> pause');
+  if(k1)L.push('<i>'+k1+'</i><i class="d">Clavier</i> <b>ZQSD</b>'+(ext?' / <b>flèches</b>':'')+' · <b>J</b> passe / tacle · <b>K</b> tir · <b>I</b> profondeur · <b>L</b> '+lob+' · <b>Maj</b> sprint · <b>Espace</b> changer · <b>Échap</b> pause');
   const k2=who('kb2');
-  if(k2)L.push('<i>'+k2+' · Clavier 2</i> <b>Flèches</b> · <b>1</b> passe / tacle · <b>2</b> tir · <b>5</b> profondeur · <b>3</b> '+lob+' · <b>0</b> sprint · <b>.</b> changer · <b>+</b> pause');
+  if(k2)L.push('<i>'+k2+'</i><i class="d">Clavier 2</i> <b>Flèches</b> · <b>1</b> passe / tacle · <b>2</b> tir · <b>5</b> profondeur · <b>3</b> '+lob+' · <b>0</b> sprint · <b>.</b> changer · <b>+</b> pause');
   $('hint').innerHTML=L.map(l=>'<div>'+l+'</div>').join('')}
 
 // ---------- Rendu ----------
