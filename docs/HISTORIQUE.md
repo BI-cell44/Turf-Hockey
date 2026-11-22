@@ -4,6 +4,10 @@ Chronologie des demandes de l'utilisateur et de ce qui a été livré. Les numé
 
 ---
 
+## 22/11/2026 (nuit) — Firefox corrigé, balle portée dans le but interdite
+- **Firefox (écran noir)** : le jeu dessinait correctement (pixels lus = bonnes couleurs) mais Firefox 160 / Windows affichait le canvas en noir. Solution : canvas logiciel (`willReadFrequently:true`) automatique sur Firefox. Options de dépannage dans l'adresse : `?sw=1` / `?sw=0` (forcer ou non le canvas logiciel), `?alpha=0`, `?cs=0`, `?debug=1` (ligne de diagnostic). Les erreurs JavaScript s'affichent en rouge à l'écran (`fail`).
+- **Gameplay** : on ne peut plus entrer dans le but en portant la balle ; la balle portée est bloquée à 0,4 m de la ligne de but, il faut tirer (l'IA tire déjà dans le cercle).
+
 ## 22/11/2026 (nuit) — Diagnostic de l'écran noir Firefox
 - Le garde-fou de taille n'a pas réglé l'écran noir (terrain et mini-carte noirs, HUD et messages visibles, aucune erreur JS). Ajout d'un diagnostic : `fail(e)` affiche toute erreur en rouge à l'écran ; `?debug=1` dans l'adresse affiche CW/CH/DPR/taille du canvas/état. En attente du retour de l'utilisateur.
 

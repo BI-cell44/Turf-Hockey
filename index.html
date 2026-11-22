@@ -780,7 +780,8 @@ function sim(dt){
     const a=players[i],b=players[j],dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy);
     if(d<.85&&d>.001){const push=(.85-d)/2,nx=dx/d,ny=dy/d;a.x-=nx*push;a.y-=ny*push;b.x+=nx*push;b.y+=ny*push}}
 
-  if(ball.owner){const o=ball.owner;attach(o);if(grace>0){ball.x=clamp(ball.x,.3,L-.3);ball.y=clamp(ball.y,.3,W-.3)}touch(o);st[o.t].poss+=dt;
+  if(ball.owner){const o=ball.owner;attach(o);if(ball.x<.4||ball.x>L-.4){const bx=clamp(ball.x,.4,L-.4);o.x+=bx-ball.x;ball.x=bx} // balle portée : impossible de rentrer dans le but, il faut tirer
+  if(grace>0){ball.x=clamp(ball.x,.3,L-.3);ball.y=clamp(ball.y,.3,W-.3)}touch(o);st[o.t].poss+=dt;
     const ic=inZone(ball.x,ball.y,goalX(o.t));if(ic&&ball.inC!==o.t){st[o.t].circle++;com('j','cercle',{p:0,prob:.4,cd:12,ttl:2.5})}ball.inC=ic?o.t:-1}
   else{
     ball.x+=ball.vx*dt;ball.y+=ball.vy*dt;
@@ -988,7 +989,7 @@ function updateHint(){$('tbB').textContent=M.lob?'Aér.':'Bande';
 // ---------- Rendu ----------
 const QS=new URLSearchParams(location.search); // options de dépannage : ?sw=1 (canvas logiciel), ?alpha=0 (canvas opaque), ?cs=0 (sans color-scheme)
 if(QS.get('cs')==='0')document.documentElement.style.colorScheme='normal';
-const cOpt={willReadFrequently:QS.get('sw')==='1',alpha:QS.get('alpha')!=='0'};
+const cOpt={willReadFrequently:QS.get('sw')==='1'||(QS.get('sw')!=='0'&&/Firefox\//.test(navigator.userAgent)),alpha:QS.get('alpha')!=='0'}; // Firefox : canvas logiciel (le canvas GPU restait noir sur Firefox 160/Windows)
 const cv=$('pitch'),ctx=cv.getContext('2d',cOpt),mini=$('mini'),mctx=mini.getContext('2d',cOpt);
 let DPR=1,CW=0,CH=0,camX=0,camY=0;
 function resize(){DPR=Math.min(2,window.devicePixelRatio||1);CW=cv.clientWidth;CH=cv.clientHeight;cv.width=Math.round(CW*DPR);cv.height=Math.round(CH*DPR);mini.width=168*DPR;mini.height=101*DPR}
