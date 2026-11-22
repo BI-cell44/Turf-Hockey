@@ -22,16 +22,16 @@ body{background:var(--night);color:var(--ink);font-family:var(--f-body);overflow
 #game{position:relative;height:100%;overflow:hidden;user-select:none;-webkit-user-select:none}
 #pitch{position:absolute;inset:0;width:100%;height:100%;display:block}
 
-.board{position:absolute;top:calc(10px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);
+.board{position:absolute;top:calc(6px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);
   display:flex;align-items:stretch;font-family:var(--f-disp);text-transform:uppercase;
-  box-shadow:0 6px 24px rgba(0,0,0,.45);border-radius:6px;overflow:hidden;white-space:nowrap}
-.board > div{display:flex;align-items:center;gap:8px;padding:4px 12px;font-size:22px;font-weight:800;letter-spacing:.04em}
-.tm{background:var(--panel)}
+  box-shadow:0 4px 16px rgba(0,0,0,.4);border-radius:5px;overflow:hidden;white-space:nowrap}
+.board > div{display:flex;align-items:center;gap:6px;padding:2px 9px;font-size:16px;font-weight:800;letter-spacing:.04em}
+.tm{background:rgba(13,24,41,.62)}
 .sw{width:6px;align-self:stretch;margin-block:-4px}
 .tm.h .sw{background:var(--home)} .tm.a .sw{background:var(--away)}
-.sc{background:var(--ink);color:var(--night);font-size:28px!important;font-variant-numeric:tabular-nums;gap:6px!important}
-.ck{background:var(--accent);color:var(--night);font-variant-numeric:tabular-nums}
-.ck small{font-size:15px;opacity:.75}
+.sc{background:rgba(238,243,251,.92);color:var(--night);font-size:21px!important;font-variant-numeric:tabular-nums;gap:6px!important}
+.ck{background:rgba(255,210,63,.9);color:var(--night);font-variant-numeric:tabular-nums}
+.ck small{font-size:12px;opacity:.75}
 
 #msg{position:absolute;left:50%;top:28%;transform:translate(-50%,-50%) skewX(-8deg);text-align:center;pointer-events:none;
   opacity:0;transition:opacity .2s;text-shadow:0 4px 18px rgba(0,0,0,.6)}
@@ -319,8 +319,8 @@ const MODES={
   grass:{label:'Gazon 11 c. 11',desc:"Gazon, 11 contre 11, 4 quarts-temps. Passes aériennes et tirs levés autorisés, la balle sort sur les côtés. Un but ne compte que si le tir part du cercle.",
     L:91.4,W:55,GW:3.66,GH:2.14,CR:14.63,DASH:5,LC:22.9,SPOT:6.475,lines:[22.9,91.4-22.9],boards:false,lob:true,shotK:1,fric:.55,periods:4,plab:'Q',pmin:15,
     FORM:[[.03,.5,1,'GK'],[.2,.14,2,'DEF'],[.17,.38,3,'DEF'],[.17,.62,4,'DEF'],[.2,.86,5,'DEF'],[.4,.25,6,'MID'],[.36,.5,8,'MID'],[.4,.75,10,'MID'],[.62,.18,7,'FWD'],[.64,.5,9,'FWD'],[.62,.82,11,'FWD']]},
-  indoor:{label:'Salle 5 c. 5',desc:"Salle, 5 contre 5, 2 mi-temps. La balle reste au sol : pas de passe ni de tir levé. Elle rebondit sur les bandes latérales : vise la bande pour faire une passe en rebond. Un but ne compte que si le tir part du cercle.",
-    L:44,W:22,GW:3,GH:2,CR:9,DASH:3,LC:9,SPOT:7,lines:[],boards:true,lob:false,shotK:.78,fric:.42,periods:2,plab:'MT',pmin:20,
+  indoor:{label:'Salle 5 c. 5',desc:"Salle, 5 contre 5, 2 mi-temps. La balle reste au sol : pas de passe ni de tir levé. Elle rebondit sur les bandes latérales : vise la bande pour faire une passe en rebond. Un but compte si le tir part du cercle ou de la zone pointillée.",
+    L:44,W:22,GW:3,GH:2,CR:9,DASH:3,SHOOT:3,LC:9,SPOT:7,lines:[],boards:true,lob:false,shotK:.78,fric:.42,periods:2,plab:'MT',pmin:20,
     FORM:[[.04,.5,1,'GK'],[.24,.3,2,'DEF'],[.24,.7,4,'DEF'],[.56,.32,7,'FWD'],[.56,.68,9,'FWD']]}
 };
 const LEVELS=[
@@ -340,12 +340,14 @@ loadOpts();
 const saveOpts=()=>{try{localStorage.setItem('th26opts',JSON.stringify(opts))}catch(e){}};
 
 let M,L,W,GW,GH,CR,SC,S2;
-function applyMode(){M=MODES[opts.mode];({L,W,GW,GH,CR}=M);SC=L/91.4;S2=Math.max(SC,.6)}
+function applyMode(){M=MODES[opts.mode];({L,W,GW,GH,CR}=M);SC=L/91.4;S2=Math.max(SC,.6);SR=CR+(M.SHOOT||0);rest=null}
 const teams=[{col:'#ff7a1a',gk:'#c4f03b',dir:1,score:0,name:'J1'},{col:'#eef0e6',gk:'#9b6bff',dir:-1,score:0,name:'CPU'}];
 let teamLvl=[LEVELS[3],LEVELS[3]];
 const goalX=t=>teams[t].dir>0?L:0;
 const ownGoalX=t=>teams[t].dir>0?0:L;
-function inCircle(x,y,gx){const dx=Math.abs(x-gx),dy=Math.abs(y-W/2);if(dx>CR+0.01)return false;if(dy<=GW/2)return dx<=CR;return Math.hypot(dx,dy-GW/2)<=CR}
+function inCircle(x,y,gx,r){r=r||CR;const dx=Math.abs(x-gx),dy=Math.abs(y-W/2);if(dx>r+0.01)return false;if(dy<=GW/2)return dx<=r;return Math.hypot(dx,dy-GW/2)<=r}
+// zone de tir : le cercle (gazon) ; en salle, le cercle + la zone pointillée
+const inZone=(x,y,gx)=>inCircle(x,y,gx,SR)
 
 let players=[],humans=[],teamH=[[],[]];
 function buildPlayers(){players=[];for(let t=0;t<2;t++)M.FORM.forEach((f,i)=>players.push({t,i,num:f[2],role:f[3],fx:f[0],fy:f[1],x:0,y:0,vx:0,vy:0,face:0,stun:0,tcd:0,pcd:0,dec:0,charge:0,hold:0,ctrl:null}))}
@@ -353,7 +355,7 @@ const homeX=p=>teams[p.t].dir>0?p.fx*L:L-p.fx*L;
 const homeY=p=>teams[p.t].dir>0?p.fy*W:(1-p.fy)*W;
 const ball={x:0,y:0,z:0,vx:0,vy:0,vz:0,owner:null,last:null,circle:-1,target:null,rolled:new Set(),passBy:null,shot:-1,inC:-1};
 
-let state='menu',period=1,qClock=0,freeze=0,grace=0,pendingKick=null,breakT=0,DT=0.016;
+let state='menu',period=1,qClock=0,freeze=0,grace=0,rest=null,SR=0,pendingKick=null,breakT=0,DT=0.016;
 let presser=[null,null],cover=[null,null],chaser=[null,null];
 const ST=()=>({poss:0,shots:0,onT:0,passA:0,passC:0,tack:0,saves:0,corners:0,circle:0});
 let st=[ST(),ST()],qg=[];
@@ -453,7 +455,7 @@ function assignHumans(){
 }
 
 // ---------- Balle ----------
-function touch(p){ball.last=p;if(inCircle(ball.x,ball.y,goalX(p.t)))ball.circle=p.t;else if(ball.circle===p.t)ball.circle=-1}
+function touch(p){ball.last=p;if(inZone(ball.x,ball.y,goalX(p.t)))ball.circle=p.t;else if(ball.circle===p.t)ball.circle=-1}
 function attach(p){ball.x=p.x+Math.cos(p.face)*.85;ball.y=p.y+Math.sin(p.face)*.85;if(M.boards)ball.y=clamp(ball.y,.15,W-.15);ball.vx=p.vx;ball.vy=p.vy;ball.z=0;ball.vz=0}
 function give(p){
   if(ball.circle!==-1&&ball.circle!==p.t)ball.circle=-1;
@@ -545,14 +547,14 @@ function tackle(p,o,isHuman){
 }
 
 // ---------- Arrêts de jeu ----------
-function pushOpp(t){const r=5*S2;for(const q of players){if(q.t===t)continue;const d=dist(q,ball);if(d<r){const a=d>.01?Math.atan2(q.y-ball.y,q.x-ball.x):Math.random()*6.28;q.x=ball.x+Math.cos(a)*r;q.y=clamp(ball.y+Math.sin(a)*r,.4,W-.4)}}}
+function pushOpp(t,noGK){const r=5*S2;for(const q of players){if(q.t===t||(noGK&&q.role==='GK'))continue;const d=dist(q,ball);if(d<r){const a=d>.01?Math.atan2(q.y-ball.y,q.x-ball.x):Math.random()*6.28;q.x=ball.x+Math.cos(a)*r;q.y=clamp(ball.y+Math.sin(a)*r,.4,W-.4)}}}
 function restart(t,x,y,big,small){
   ball.owner=null;ball.x=x;ball.y=y;ball.vx=ball.vy=ball.vz=ball.z=0;ball.circle=-1;ball.rolled=new Set();ball.target=null;ball.passBy=null;ball.shot=-1;
   let tk=null,bd=1e9;for(const p of players)if(p.t===t&&p.role!=='GK'){const d=Math.hypot(p.x-x,p.y-y);if(d<bd){bd=d;tk=p}}
   const fa=Math.atan2(W/2-y,teams[t].dir*12);
   tk.face=fa;tk.x=clamp(x-Math.cos(fa)*.85,.7,L-.7);tk.y=clamp(y-Math.sin(fa)*.85,.7,W-.7);tk.vx=tk.vy=0;
   give(tk);assignHumans();
-  pushOpp(t);grace=1;for(const p of players)p.charge=0;
+  pushOpp(t);grace=1;for(const p of players)p.charge=0;rest={t,x:ball.x,y:ball.y,age:0};
   showMsg(big,small,1.5);sfx.whistle();
 }
 function kickoff(t){
@@ -560,7 +562,7 @@ function kickoff(t){
   ball.x=L/2;ball.y=W/2;ball.vx=ball.vy=ball.vz=ball.z=0;ball.circle=-1;ball.rolled=new Set();ball.passBy=null;ball.shot=-1;ball.owner=null;
   let tk=null,bd=1e9;for(const p of players)if(p.t===t&&p.role!=='GK'){const d=Math.abs(p.x-L/2)+Math.abs(p.y-W/2)*.6;if(d<bd){bd=d;tk=p}}
   tk.x=L/2-teams[t].dir*.85;tk.y=W/2;
-  give(tk);assignHumans();pushOpp(t);grace=1.2;
+  give(tk);assignHumans();pushOpp(t);grace=1.2;rest={t,x:ball.x,y:ball.y,age:0};
   sfx.whistle();
 }
 function goal(t){
@@ -580,7 +582,7 @@ function checkOut(){
   const side=ball.x<0?0:L,scorer=goalX(0)===side?0:1;
   if(Math.abs(ball.y-W/2)<GW/2&&ball.z<GH){
     if(ball.circle===scorer){goal(scorer);return}
-    restart(1-scorer,side===0?CR:L-CR,clamp(ball.y,1,W-1),'But refusé','Le tir doit partir du cercle');return}
+    restart(1-scorer,side===0?CR:L-CR,clamp(ball.y,1,W-1),'But refusé',M.SHOOT?'Le tir doit partir du cercle ou de la zone pointillée':'Le tir doit partir du cercle');return}
   if(lastT===scorer)restart(1-scorer,side===0?CR:L-CR,clamp(ball.y,2,W-2),'Sortie de but','Coup franc');
   else{st[scorer].corners++;restart(scorer,side===0?M.LC:L-M.LC,ball.y<W/2?1:W-1,'Corner long',teams[scorer].name)}
 }
@@ -614,7 +616,7 @@ function aiGK(p){
   steer(p,tx,ty,false,7);
 }
 function aiCarrier(p){
-  const lv=teamLvl[p.t],dir=teams[p.t].dir,gx=goalX(p.t),dG=Math.hypot(gx-p.x,W/2-p.y),inC=inCircle(p.x,p.y,gx);
+  const lv=teamLvl[p.t],dir=teams[p.t].dir,gx=goalX(p.t),dG=Math.hypot(gx-p.x,W/2-p.y),inC=inZone(p.x,p.y,gx);
   const opp=nearestOpp(p),dO=opp?dist(p,opp):99,ahead=opp?(opp.x-p.x)*dir>-.5:false;
   p.dec-=DT;
   if(p.dec<=0&&grace<=0){
@@ -649,13 +651,15 @@ function aiPlayer(p){
     const u=Math.max(up+sh,up*.6);
     return steer(p,clamp(U(u),e,L-e),clamp(hy+(ball.y-W/2)*.3,e,W-e),false);
   }
-  if(presser[p.t]===p){steer(p,o.x+o.vx*.3,o.y+o.vy*.3,dist(p,o)>4);if(dist(p,o)<1.6&&Math.random()<DT*teamLvl[p.t].tRate)tackle(p,o,false);return}
-  if(cover[p.t]===p){const og=ownGoalX(p.t),a=Math.atan2(W/2-o.y,og-o.x);return steer(p,o.x+Math.cos(a)*6*S2,o.y+Math.sin(a)*6*S2,true)}
+  const held=rest&&p.t!==rest.t&&o.t===rest.t;
+  if(!held&&presser[p.t]===p){steer(p,o.x+o.vx*.3,o.y+o.vy*.3,dist(p,o)>4);if(dist(p,o)<1.6&&Math.random()<DT*teamLvl[p.t].tRate)tackle(p,o,false);return}
+  if(!held&&cover[p.t]===p){const og=ownGoalX(p.t),a=Math.atan2(W/2-o.y,og-o.x);return steer(p,o.x+Math.cos(a)*6*S2,o.y+Math.sin(a)*6*S2,true)}
   const floor=Math.max(4*S2,Math.min(ub-3*S2,CR*.6))+(p.role==='DEF'?0:p.role==='MID'?4*S2:8*S2);
   let tx=U(Math.max(up-5*SC+sh,floor)),ty=hy+(ball.y-hy)*.35;
   let m=null,md=12*S2;for(const q of players)if(q.t!==p.t&&q.role!=='GK'&&q!==o){const d=Math.hypot(q.x-tx,q.y-ty);if(d<md){md=d;m=q}}
   if(m){tx=(tx+m.x-dir*2*S2)/2;ty=(ty+m.y)/2}
   tx=U(Math.max(U(tx),2.5*S2));
+  if(held){const R=5*S2+.8,d=Math.hypot(tx-ball.x,ty-ball.y);if(d<R){const a=d>.01?Math.atan2(ty-ball.y,tx-ball.x):Math.atan2(W/2-ball.y,ownGoalX(p.t)-ball.x);tx=ball.x+Math.cos(a)*R;ty=ball.y+Math.sin(a)*R}}
   steer(p,clamp(tx,2,L-2),clamp(ty,2,W-2),false);
 }
 
@@ -689,6 +693,9 @@ function sim(dt){
     return;
   }
   grace=Math.max(0,grace-dt);
+  // règle des 5 m (3 m en salle) : tant que la balle n'est pas jouée, l'adversaire reste à distance (l'IA marque sans foncer sur le porteur)
+  if(rest){rest.age+=dt;const o=ball.owner;
+    if(!o||o.t!==rest.t||dist(ball,rest)>3*S2||rest.age>6)rest=null;else if(rest.age<3)pushOpp(rest.t,true)}
   computeRoles();
   for(const p of players){
     p.tcd-=dt;p.pcd-=dt;
@@ -708,7 +715,7 @@ function sim(dt){
     if(d<.85&&d>.001){const push=(.85-d)/2,nx=dx/d,ny=dy/d;a.x-=nx*push;a.y-=ny*push;b.x+=nx*push;b.y+=ny*push}}
 
   if(ball.owner){const o=ball.owner;attach(o);if(grace>0){ball.x=clamp(ball.x,.3,L-.3);ball.y=clamp(ball.y,.3,W-.3)}touch(o);st[o.t].poss+=dt;
-    const ic=inCircle(ball.x,ball.y,goalX(o.t));if(ic&&ball.inC!==o.t)st[o.t].circle++;ball.inC=ic?o.t:-1}
+    const ic=inZone(ball.x,ball.y,goalX(o.t));if(ic&&ball.inC!==o.t)st[o.t].circle++;ball.inC=ic?o.t:-1}
   else{
     ball.x+=ball.vx*dt;ball.y+=ball.vy*dt;
     if(ball.z>0||ball.vz>0){ball.vz-=9.8*dt;ball.z+=ball.vz*dt;
@@ -921,7 +928,7 @@ function draw(){
   camX=L+2*m<2*hw?L/2:clamp(camX,hw-m,L+m-hw);
   camY=W+2*m<2*hh?W/2:clamp(camY,hh-m,W+m-hh);
   ctx.setTransform(DPR,0,0,DPR,0,0);ctx.fillStyle=M.boards?'#1b1f27':'#0a2a20';ctx.fillRect(0,0,CW,CH);
-  ctx.setTransform(DPR*s,0,0,DPR*s,DPR*(CW/2-camX*s),DPR*(CH/2-camY*s));
+  ctx.setTransform(DPR*s,0,0,DPR*s,DPR*(CW/2-camX*s),DPR*(CH/2+14-camY*s)); // +14 px : le terrain est centré sous le bandeau des scores
   if(M.boards){
     ctx.fillStyle='#3a3f4a';ctx.fillRect(-6,-6,L+12,W+12);
     for(let i=0;i<Math.ceil(W/1.1);i++){ctx.fillStyle=i%2?'#2c7556':'#2f7c5b';ctx.fillRect(-2,i*1.1,L+4,Math.min(1.1,W-i*1.1))}
@@ -931,7 +938,7 @@ function draw(){
     for(let i=0;i<Math.ceil(L/4.57);i++){ctx.fillStyle=i%2?'#1a5ca8':'#1d64b5';ctx.fillRect(i*4.57,0,Math.min(4.57,L-i*4.57),W)}
   }
   const own=ball.owner&&ball.owner.ctrl!==null?ball.owner:null;
-  if(own){const g=goalX(own.t);dShape(ctx,g,CR);ctx.lineTo(g,W/2-GW/2-CR);ctx.fillStyle=inCircle(ball.x,ball.y,g)?'rgba(255,210,63,.22)':'rgba(255,210,63,.08)';ctx.fill()}
+  if(own){const g=goalX(own.t);dShape(ctx,g,SR);ctx.lineTo(g,W/2-GW/2-SR);ctx.fillStyle=inZone(ball.x,ball.y,g)?'rgba(255,210,63,.22)':'rgba(255,210,63,.08)';ctx.fill()}
   const lw=Math.max(.075,1.6/s);ctx.strokeStyle='#f4f7fb';ctx.lineWidth=lw;
   ctx.strokeRect(0,0,L,W);
   ctx.beginPath();for(const x of [L/2,...M.lines]){ctx.moveTo(x,0);ctx.lineTo(x,W)}ctx.stroke();

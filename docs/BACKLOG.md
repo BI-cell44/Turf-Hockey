@@ -16,8 +16,11 @@ Quand un élément est terminé, le retirer d'ici et l'ajouter dans `HISTORIQUE.
 
 - **P1 — Sprint auto mobile** : faire valider le ressenti sur téléphone (seuils 88 % / 75 % dans `setJ`).
 
+- **P1 — Zone de tir en salle** : confirmer la règle voulue (pointillé valable ?) et si le bandeau est assez discret sur téléphone.
+
 ## Gameplay
 - P2 — Corners de pénalité (penalty corners) et pénalty (stroke) : règles majeures du hockey absentes.
+- P2 — Autres principes FIH à reprendre : coup franc rapide (self-pass), balle qui doit parcourir 5 m avant d'entrer dans le cercle sur coup franc offensif, engagement avec tous les joueurs dans leur moitié.
 - P2 — Fautes : obstruction, pied, crosse haute → coups francs.
 - P2 — Gardien contrôlable (aujourd'hui toujours IA) ou bouton de sortie du gardien.
 - P2 — Tir dirigé plus fin (visée haut/bas du but en gazon, tir du revers).

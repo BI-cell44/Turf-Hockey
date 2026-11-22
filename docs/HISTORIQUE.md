@@ -4,6 +4,11 @@ Chronologie des demandes de l'utilisateur et de ce qui a été livré. Les numé
 
 ---
 
+## 22/11/2026 — Bandeau plus discret, zone de tir en salle, remises en jeu plus réalistes
+- **Bandeau des scores** : plus petit (polices réduites), fond semi-transparent, collé en haut ; la caméra est décalée de 14 px pour que le terrain soit centré sous le bandeau.
+- **Salle** : un but compte aussi si le tir part de la zone pointillée (`M.SHOOT=3`, rayon `SR`, fonction `inZone`). Gazon inchangé (cercle plein). Remarque : les règles FIH de la salle (déc. 2022) disent que le tir part du cercle plein et que la ligne pointillée (3 m) n'est qu'un repère ; règle adaptée à la demande de l'utilisateur, à vérifier selon sa fédération (revenir en arrière = retirer `SHOOT:3`).
+- **Remises en jeu** (touche, sortie de but, corner, engagement) : règle des 5 m (3 m en salle, FIH 13.2). Tant que la balle n'est pas jouée (passe, tir, perte, ou balle déplacée de plus de 3 m, ou 6 s), les adversaires restent à distance (poussés à 5 m pendant 3 s, y compris humains hors gardien) et l'IA marque sans foncer sur le porteur (`rest`, branche `held` dans `aiPlayer`).
+
 ## 17/11/2026 — Bandeau des commandes selon les joueurs actifs
 - Le bandeau en bas de l'écran n'affiche que les commandes des appareils qui jouent : une ligne « Manette » (si au moins une manette joue), une ligne « Clavier » (clavier 1, ZQSD + J K I L, avec les flèches si le clavier 2 ne joue pas), une ligne « Clavier 2 » (flèches + pavé numérique). Chaque ligne indique le ou les joueurs concernés (J1, J2…), écrits dans leur couleur de joueur.
 

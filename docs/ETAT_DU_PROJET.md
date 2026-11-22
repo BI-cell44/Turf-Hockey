@@ -82,6 +82,8 @@ Règle commune : **un but ne compte que si un attaquant a touché la balle dans 
 
 - Tactile : le sprint n'a plus de bouton ; `setJ` l'active au bord du joystick (`T.sprint`).
 
+- Remise en jeu : variable `rest` (équipe qui reprend, point, âge) ; `inZone`/`SR` = zone de tir (cercle + pointillé en salle).
+
 ## Carte du code (`index.html`)
 | Section (commentaire `// ----------`) | Contenu principal |
 |---|---|
