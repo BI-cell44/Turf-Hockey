@@ -5,6 +5,7 @@ Jeu de hockey vu de dessus, jouable à la manette façon eFootball, de 1 à 4 jo
 - **Gazon 11 contre 11** : 4 quarts-temps, passes aériennes, remises en jeu.
 - **Salle 5 contre 5** : 2 mi-temps, balle au sol, bandes latérales et passes en bande.
 - 5 niveaux d'IA (Débutant → Légende), statistiques de match, coop ou versus.
+- Commentaires audio optionnels (journaliste et consultant) : les MP3 du dossier `commentaires/` ne sont téléchargés que si l'option est activée dans le menu.
 
 ## Jouer
 Ouvre `index.html` dans Chrome, Edge ou Firefox (double-clic, aucune installation). Branche une manette et appuie sur un bouton pour qu'elle soit détectée. Sur téléphone ou tablette, tourne l'écran en paysage : joystick à gauche, boutons à droite.

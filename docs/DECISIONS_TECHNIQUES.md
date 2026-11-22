@@ -60,3 +60,10 @@ Chaque décision : le choix, la raison, et ce qu'il ne faut pas casser. Ajouter 
 - **Exception à D1** : PeerJS est chargé à la demande depuis jsDelivr (version fixée, empreinte SRI). Hors de ce mode, aucune ressource externe.
 - **Sécurité** : tout message reçu est validé (nombres, longueurs, noms nettoyés par `cleanName` avant `innerHTML`).
 - **À ne pas casser** : l'hôte ne place les messages/sons dans `evq` que si `net.live` ; `backToMenu` côté hôte ramène à la salle (`goLobby`), pas au menu.
+
+## D15 — Commentaires audio : fichiers MP3 chargés à la demande
+- **Choix** : les voix sont des MP3 séparés dans `commentaires/`, référencés par la liste `COM` (dans `index.html`) ; un seul `Audio` partagé (compatible iOS), file d'attente avec priorités.
+- **Raison** : ne pas alourdir la page ; rien n'est téléchargé tant que l'option « Commentaires audio » est sur Non (test : `tests/commentaires_test.js`).
+- **Exception à D1** : fichiers audio à côté de `index.html` (comme PeerJS, seulement si l'option est activée). Ils ne marchent pas dans l'Artifact claude.ai.
+- **Régénérer** : `python3 tools/prepare_commentaires.py DOSSIER_JOURNALISTE DOSSIER_CONSULTANT commentaires` (réencode en mono 24 kHz 40 kbit/s, supprime les doublons v1=v2, affiche la ligne `COM`). `DROP` liste les clips volontairement exclus.
+- **En ligne** : l'hôte envoie l'identifiant du clip (`['v',id,priorité]`), l'invité vérifie l'identifiant contre `COM` avant de le jouer.

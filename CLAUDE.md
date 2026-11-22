@@ -24,7 +24,7 @@ Jeu de hockey (gazon 11 c. 11 et salle 5 c. 5) vu de dessus, jouable à la manet
 ## Règles de travail
 - **Langue** : l'utilisateur écrit en français, souvent rapidement (fautes de frappe). Répondre en français simple. Toute l'interface du jeu est en français.
 - **Un seul fichier** : tout le jeu reste dans `index.html`. Pas de build, pas de framework, pas de bibliothèque externe (seule ressource distante : la police Google Fonts, avec repli système).
-  Exception : le jeu en ligne charge PeerJS à la demande (D13).
+  Exceptions : le jeu en ligne charge PeerJS à la demande (D13) ; les commentaires audio sont des MP3 du dossier `commentaires/`, chargés seulement si l'option est activée (D15).
 - **Contrôle manette d'abord** : chaque nouvel écran ou bouton doit être utilisable à la manette (voir `BTNS`, `navBtns`, `activate` dans la section « Flux de jeu »). La souris et le clavier sont des compléments.
 - **Éviter les validations accidentelles** : le bouton A sert aussi à passer/tacler en jeu. Les écrans qui suivent directement une phase de jeu (fin de match) ne doivent pas se valider sur un simple A.
 - **Après chaque modification** :

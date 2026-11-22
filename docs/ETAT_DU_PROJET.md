@@ -59,6 +59,12 @@ Règle commune : **un but ne compte que si un attaquant a touché la balle dans 
 - Les coéquipiers IA d'une équipe humaine utilisent `MATE`.
 - Placement en repère d'équipe `u` = distance à son propre but. Défenseurs : plancher de profondeur (`floor`) pour ne pas coller à la ligne de fond ; remontée quand l'équipe a la balle (`up*.75`).
 - En salle, l'IA utilise aussi les passes en bande (`bestBank`) quand la passe directe est coupée.
+- Tactique (`tac` dans `LEVELS`, Pro .5 / Top et Légende 1) : une-deux (`p.run`), passe au second poteau dans la zone, largeur des attaquants, passes en bande plus fréquentes.
+
+### Commentaires audio (`COM`, `com`, `comTick`)
+- Option `opts.com` (0 Non, 1 Journaliste, 2 + consultant). Lecture par un seul élément `Audio` (une voix à la fois, file `comQ` avec priorité 0 ambiance / 1 normal / 2 coupe la parole, expiration `ttl`, délai par catégorie `cd`).
+- `com(voix, groupe, {p,prob,cd,ttl,only,ok})` est appelé aux événements (but, arrêt, tir, mi-temps…). Les MP3 (`commentaires/j|c/groupe_NN_vK.mp3`) ne sont demandés qu'au moment de la lecture ; au lancement, quelques clips clés sont préchargés seulement si l'option est active.
+- Ambiance : toutes les 28–52 s de jeu calme (`comAmbient`). Si un fichier est introuvable (Artifact), message unique « Commentaires indisponibles ».
 
 ### Passes en bande (salle)
 - `bankAim` calcule le point miroir en tenant compte de l'amorti de la bande (`E_B` = 0,7).

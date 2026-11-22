@@ -4,6 +4,13 @@ Chronologie des demandes de l'utilisateur et de ce qui a été livré. Les numé
 
 ---
 
+## 22/11/2026 (soir) — Commentaires audio et IA tactique
+- **Commentaires audio** (option du menu « Commentaires audio » : Non / Journaliste / Journ. + consultant, par défaut Non). Voix fournies par l'utilisateur (ElevenLabs : journaliste « Hugo », consultant « Dembele »). 145 MP3 (2,2 Mo) dans `commentaires/j/` et `commentaires/c/`, **téléchargés seulement si l'option est activée** (aucune requête sinon). Événements commentés : engagement et présentation, passes (dont bande), interceptions, tacles, entrées dans le cercle, tirs, arrêts, occasions manquées, buts, buts refusés, sorties, corner long, mi-temps, fin de match, dernière minute. Le consultant réagit après le journaliste. Les clips sans rapport avec le jeu (cartons, fautes, pénalités, revers, raclette, ralenti, poteau, noms de clubs…) ont été écartés à la demande de l'utilisateur.
+- **En ligne** : l'hôte choisit les clips et les envoie aux invités (événement `v`) ; chacun les joue selon son propre réglage.
+- **IA (Pro, Top player, Légende)** d'après les vidéos tactiques de salle de l'utilisateur (schémas animés d'entraînement) : une-deux (le passeur part dans l'espace et reçoit le retour), passe de l'autre côté du but au second poteau dans la zone, largeur des attaquants, passes en bande plus fréquentes. Paramètre `tac` dans `LEVELS` (0 Débutant/Amateur, .5 Pro, 1 Top/Légende). Mesure IA contre IA (12 × 8 min) : légèrement meilleure (salle 177–168 buts, gazon 97–89), écart faible.
+- Outil : `tools/prepare_commentaires.py` (zip → MP3 compressés + liste `COM`). Test : `tests/commentaires_test.js`.
+- Limite : non disponible dans l'Artifact claude.ai (les MP3 sont des fichiers à côté de la page : GitHub Pages ou copie locale).
+
 ## 22/11/2026 — Bandeau plus discret, zone de tir en salle, remises en jeu plus réalistes
 - **Bandeau des scores** : plus petit (polices réduites), fond semi-transparent, collé en haut ; la caméra est décalée de 14 px pour que le terrain soit centré sous le bandeau.
 - **Salle** : un but compte aussi si le tir part de la zone pointillée (`M.SHOOT=3`, rayon `SR`, fonction `inZone`). Gazon inchangé (cercle plein). Remarque : les règles FIH de la salle (déc. 2022) disent que le tir part du cercle plein et que la ligne pointillée (3 m) n'est qu'un repère ; règle adaptée à la demande de l'utilisateur, à vérifier selon sa fédération (revenir en arrière = retirer `SHOOT:3`).

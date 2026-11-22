@@ -33,6 +33,10 @@ Quand un élément est terminé, le retirer d'ici et l'ajouter dans `HISTORIQUE.
 - P3 — Styles de jeu de l'équipe IA (contre-attaque, possession).
 
 ## Modes et menus
+- P2 — Choix du club adverse pour utiliser les commentaires nominatifs déjà enregistrés (Sautron, Nantes, Carquefou, Saint-Sébastien, Savenay : présentation, but, avantage, égalisation, victoire). Non branchés pour l'instant (le jeu n'a pas de clubs).
+- P3 — Commentaires pour fautes, cartons, corner de pénalité, penalty : ces événements n'existent pas dans le jeu.
+- P3 — Détection de contre-attaque / 3 contre 2 pour déclencher les clips « contre-attaque ».
+- À valider par l'utilisateur : volume et fréquence des commentaires, utilité des nouveaux comportements de l'IA.
 - P2 — Choix des équipes / couleurs des maillots (attention au contraste avec le terrain).
 - P2 — Réglage de la caméra (zoom, vue large) et option de sons on/off.
 - P3 — Tournoi / championnat, tirs au but en cas d'égalité.
