@@ -4,6 +4,9 @@ Chronologie des demandes de l'utilisateur et de ce qui a été livré. Les numé
 
 ---
 
+## 22/11/2026 (nuit) — Écran noir sous Firefox (garde-fou)
+- Signalement : terrain noir sous Firefox (bandeau et commandes visibles). Cause non reproduite (pas de Firefox dans l'environnement de test) ; hypothèse : taille du canvas nulle ou périmée au chargement. Correction : `frame` rappelle `resize()` si la taille affichée du canvas change ou vaut 0. Si le problème persiste : demander le message d'erreur de la console (F12).
+
 ## 22/11/2026 (soir) — Commentaires audio et IA tactique
 - **Commentaires audio** (option du menu « Commentaires audio » : Non / Journaliste / Journ. + consultant, par défaut Non). Voix fournies par l'utilisateur (ElevenLabs : journaliste « Hugo », consultant « Dembele »). 145 MP3 (2,2 Mo) dans `commentaires/j/` et `commentaires/c/`, **téléchargés seulement si l'option est activée** (aucune requête sinon). Événements commentés : engagement et présentation, passes (dont bande), interceptions, tacles, entrées dans le cercle, tirs, arrêts, occasions manquées, buts, buts refusés, sorties, corner long, mi-temps, fin de match, dernière minute. Le consultant réagit après le journaliste. Les clips sans rapport avec le jeu (cartons, fautes, pénalités, revers, raclette, ralenti, poteau, noms de clubs…) ont été écartés à la demande de l'utilisateur.
 - **En ligne** : l'hôte choisit les clips et les envoie aux invités (événement `v`) ; chacun les joue selon son propre réglage.

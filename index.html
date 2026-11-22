@@ -1358,6 +1358,7 @@ try{const c=(new URLSearchParams(location.search).get('salle')||'').toUpperCase(
 let last=performance.now();
 function frame(t){
   const dt=Math.min(.033,(t-last)/1000);last=t;
+  if(cv.clientWidth!==CW||cv.clientHeight!==CH||!cv.width)resize(); // garde-fou : taille du canvas obsolète ou nulle (écran noir sous Firefox)
   try{update(dt)}catch(e){console.error(e)}
   try{netTick(performance.now())}catch(e){console.error(e)}
   try{comTick(dt)}catch(e){console.error(e)}
