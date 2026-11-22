@@ -4,6 +4,9 @@ Chronologie des demandes de l'utilisateur et de ce qui a été livré. Les numé
 
 ---
 
+## 22/11/2026 (nuit) — Diagnostic de l'écran noir Firefox
+- Le garde-fou de taille n'a pas réglé l'écran noir (terrain et mini-carte noirs, HUD et messages visibles, aucune erreur JS). Ajout d'un diagnostic : `fail(e)` affiche toute erreur en rouge à l'écran ; `?debug=1` dans l'adresse affiche CW/CH/DPR/taille du canvas/état. En attente du retour de l'utilisateur.
+
 ## 22/11/2026 (nuit) — Écran noir sous Firefox (garde-fou)
 - Signalement : terrain noir sous Firefox (bandeau et commandes visibles). Cause non reproduite (pas de Firefox dans l'environnement de test) ; hypothèse : taille du canvas nulle ou périmée au chargement. Correction : `frame` rappelle `resize()` si la taille affichée du canvas change ou vaut 0. Si le problème persiste : demander le message d'erreur de la console (F12).
 

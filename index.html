@@ -1356,14 +1356,19 @@ function netTick(now){
 demoReset();renderMenu();camX=L/2;camY=W/2;
 try{const c=(new URLSearchParams(location.search).get('salle')||'').toUpperCase();if(/^[A-Z0-9]{5}$/.test(c)){$('code').value=c;goOnline();netJoin(c)}}catch(e){}
 let last=performance.now();
+// Diagnostic : toute erreur du jeu s'affiche en rouge à l'écran (clic pour fermer) ; ajouter ?debug=1 à l'adresse pour voir aussi la taille du canvas.
+function fail(e){console.error(e);try{let d=$('err');if(!d){d=document.createElement('div');d.id='err';d.style.cssText='position:fixed;left:8px;top:8px;z-index:99;max-width:90vw;padding:6px 10px;background:#7a1020;color:#fff;font:12px monospace;border-radius:6px;white-space:pre-wrap;cursor:pointer';d.onclick=()=>d.remove();document.body.appendChild(d)}d.textContent=String(e&&e.stack||e).slice(0,700)}catch(x){}}
+const DBG=/[?&]debug=1/.test(location.search);let dbgEl=null;
+function dbg(){if(!DBG)return;if(!dbgEl){dbgEl=document.createElement('div');dbgEl.style.cssText='position:fixed;left:8px;bottom:60px;z-index:99;padding:4px 8px;background:#000c;color:#9f9;font:12px monospace';document.body.appendChild(dbgEl)}
+  dbgEl.textContent='CW='+CW+' CH='+CH+' DPR='+DPR+' canvas='+cv.width+'x'+cv.height+' state='+state+' cam='+camX.toFixed(1)+','+camY.toFixed(1)+' ball='+ball.x.toFixed(1)+','+ball.y.toFixed(1)}
 function frame(t){
   const dt=Math.min(.033,(t-last)/1000);last=t;
   if(cv.clientWidth!==CW||cv.clientHeight!==CH||!cv.width)resize(); // garde-fou : taille du canvas obsolète ou nulle (écran noir sous Firefox)
-  try{update(dt)}catch(e){console.error(e)}
-  try{netTick(performance.now())}catch(e){console.error(e)}
-  try{comTick(dt)}catch(e){console.error(e)}
+  try{update(dt)}catch(e){fail(e)}
+  try{netTick(performance.now())}catch(e){fail(e)}
+  try{comTick(dt)}catch(e){fail(e)}
   if(msgT>0){msgT-=dt;if(msgT<=0)$('msg').classList.remove('on')}
-  try{draw();drawMini();hud()}catch(e){console.error(e)}
+  try{draw();drawMini();hud()}catch(e){fail(e)}
   const hf=document.hasFocus()||pads.some(Boolean)||touchOn;if($('focus').hidden!==hf)$('focus').hidden=hf;
   const tcShow=touchOn&&state==='play'&&(humans.some(h=>h.dev==='touch')||(net.role==='guest'&&net.live&&!gmode));
   if(tcEl.hidden===tcShow){tcEl.hidden=!tcShow;if(!tcShow)tReset()}
