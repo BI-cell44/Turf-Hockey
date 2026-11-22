@@ -1360,7 +1360,8 @@ let last=performance.now();
 function fail(e){console.error(e);try{let d=$('err');if(!d){d=document.createElement('div');d.id='err';d.style.cssText='position:fixed;left:8px;top:8px;z-index:99;max-width:90vw;padding:6px 10px;background:#7a1020;color:#fff;font:12px monospace;border-radius:6px;white-space:pre-wrap;cursor:pointer';d.onclick=()=>d.remove();document.body.appendChild(d)}d.textContent=String(e&&e.stack||e).slice(0,700)}catch(x){}}
 const DBG=/[?&]debug=1/.test(location.search);let dbgEl=null;
 function dbg(){if(!DBG)return;if(!dbgEl){dbgEl=document.createElement('div');dbgEl.style.cssText='position:fixed;left:8px;bottom:60px;z-index:99;padding:4px 8px;background:#000c;color:#9f9;font:12px monospace';document.body.appendChild(dbgEl)}
-  dbgEl.textContent='CW='+CW+' CH='+CH+' DPR='+DPR+' canvas='+cv.width+'x'+cv.height+' state='+state+' cam='+camX.toFixed(1)+','+camY.toFixed(1)+' ball='+ball.x.toFixed(1)+','+ball.y.toFixed(1)}
+  dbgEl.textContent='CW='+CW+' CH='+CH+' DPR='+DPR+' canvas='+cv.width+'x'+cv.height+' state='+state+' cam='+camX.toFixed(1)+','+camY.toFixed(1)+' ball='+ball.x.toFixed(1)+','+ball.y.toFixed(1)+' px='+pxs(ctx,CW/2*DPR,CH/2*DPR)+' mini='+pxs(mctx,40,40)+' ua='+navigator.userAgent.slice(-40)}
+function pxs(c,x,y){try{return Array.from(c.getImageData(Math.floor(x),Math.floor(y),1,1).data).join(',')}catch(e){return 'err:'+e.name}}
 function frame(t){
   const dt=Math.min(.033,(t-last)/1000);last=t;
   if(cv.clientWidth!==CW||cv.clientHeight!==CH||!cv.width)resize(); // garde-fou : taille du canvas obsolète ou nulle (écran noir sous Firefox)
