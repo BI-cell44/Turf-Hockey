@@ -1374,6 +1374,7 @@ function frame(t){
   if(tcEl.hidden===tcShow){tcEl.hidden=!tcShow;if(!tcShow)tReset()}
   const rn=needRotate();if($('rotate').hidden===rn)$('rotate').hidden=!rn;
   $('game').classList.toggle('touch',touchOn);$('game').classList.toggle('nohud',state!=='play');
+  dbg();
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
